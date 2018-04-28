@@ -1,7 +1,8 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React from 'react'
+import { StyleSheet, Text, View } from 'react-native'
 import { StackNavigator } from 'react-navigation'
 import Home from './Components/home'
+import List from './Components/list'
 
 export default class App extends React.Component {
   render() {
@@ -16,7 +17,15 @@ const AppStackNavigator = StackNavigator({
 
   Main: {
     screen: Home
+  },
+  List: {
+    screen: List
   }
+},
+  {
+    navigationOptions: {
+      gesturesEnabled: false
+    }
 })
 
 

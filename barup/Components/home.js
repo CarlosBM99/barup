@@ -13,7 +13,7 @@ import {Dropdown} from 'react-native-material-dropdown'
 import {Icon} from 'native-base'
 import { TabNavigator}  from 'react-navigation'
 
-class Home extends React.Component {
+class Home extends Component {
 
   onPressButton() {
     Alert.alert('You tapped the button!')
@@ -80,7 +80,7 @@ class Home extends React.Component {
           />
 
           <Button
-            onPress={this.onPressButton}
+            onPress={() => this.props.navigation.navigate('List')}
             title="Search Bars"
             color="#841584"
             accessibilityLabel="Learn more about this purple button"
