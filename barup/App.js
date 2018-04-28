@@ -1,17 +1,24 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { Icon } from 'native-base';
+import { StackNavigator } from 'react-navigation'
+import Home from './Components/home'
 
 export default class App extends React.Component {
   render() {
     return (
-      <View style={styles.container}>
-        <Text>Open up App.js to start working on your app!</Text>
-        <Icon name="ios-home"/>
-      </View>
+      <AppStackNavigator />
     );
   }
+
 }
+
+const AppStackNavigator = StackNavigator({
+
+  Main: {
+    screen: Home
+  }
+})
+
 
 const styles = StyleSheet.create({
   container: {
