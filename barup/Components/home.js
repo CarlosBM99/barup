@@ -19,6 +19,10 @@ import SegmentedControlTab from 'react-native-segmented-control-tab';
 
 const dartCheck = require('../assets/darts_checked.png');
 const dartUncheck = require('../assets/darts_unchecked.png');
+const footballCheck = require('../assets/football_checked.png');
+const footballUncheck = require('../assets/football_unchecked.png');
+const billiardsCheck = require('../assets/billiards_checked.png');
+const billiardsUncheck = require('../assets/billiards_unchecked.png');
 
 class Home extends React.Component {
   constructor(props) {
@@ -27,6 +31,8 @@ class Home extends React.Component {
         atmIndex: -1,
         filterIndex: -1,
         showDarts: false,
+        showFootball: false,
+        showBilliards: false,
     }
   }
 
@@ -45,11 +51,31 @@ class Home extends React.Component {
   }
 
   renderDarts()  {
-    var dartCheck = this.state.showDarts? dartCheck : dartUncheck;
+    var tempDarts = this.state.showDarts? dartCheck : dartUncheck;
     return (
       <Image
         style={ styles.badge }
-        source={ dartCheck }
+        source={ tempDarts }
+      />
+    );
+  }
+
+  renderFootball()  {
+    var tempFootball = this.state.showFootball? footballCheck : footballUncheck;
+    return (
+      <Image
+        style={ styles.badge }
+        source={ tempFootball }
+      />
+    );
+  }
+
+  renderBilliards()  {
+    var tempBilliards = this.state.showBilliards? billiardsCheck : billiardsUncheck;
+    return (
+      <Image
+        style={ styles.badge }
+        source={ tempBilliards }
       />
     );
   }
@@ -119,12 +145,29 @@ class Home extends React.Component {
                     activeTabTextStyle={{ color: '#f49f44' }} />
           <Text></Text>
 
+    <View style={{flexDirection:'row', marginTop:30, marginBottom:30}}>
           <TouchableOpacity
             onPress={ () => this.setState({ showDarts: !this.state.showDarts }) } 
           >
             {this.renderDarts()}
+            <Text style={styles.headerTextBadge}>Darts</Text>
           </TouchableOpacity>
-          
+
+          <TouchableOpacity
+            onPress={ () => this.setState({ showFootball: !this.state.showFootball }) } 
+          >
+            {this.renderFootball()}
+            <Text style={styles.headerTextBadge}>Table Football</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={ () => this.setState({ showBilliards: !this.state.showBilliards }) } 
+          >
+            {this.renderBilliards()}
+            <Text style={styles.headerTextBadge}>Billiards</Text>
+          </TouchableOpacity>
+    </View>
+
           <Button
             large
             onPress={this.onPressButton}
@@ -174,5 +217,13 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     height:60,
     width:60,
+    alignSelf:'center',
+  },
+  headerTextBadge: {
+    padding: 8,
+    fontSize: 18,
+    fontWeight: "bold",
+    color: 'white',
+    alignSelf:'center',
   },
 });
