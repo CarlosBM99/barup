@@ -8,7 +8,8 @@ import {
   Image,
   Alert,
   TouchableOpacity,
-  StatusBar
+  StatusBar,
+  TouchableHighlight
 } from 'react-native';
 import {Button} from 'react-native-elements'
 import {Dropdown} from 'react-native-material-dropdown'
@@ -16,12 +17,16 @@ import {Icon,Input,Item,} from 'native-base'
 import { TabNavigator}  from 'react-navigation'
 import SegmentedControlTab from 'react-native-segmented-control-tab';
 
+const dartCheck = require('../assets/darts_checked.png');
+const dartUncheck = require('../assets/darts_unchecked.png');
+
 class Home extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
         atmIndex: -1,
         filterIndex: -1,
+        showDarts: false,
     }
   }
 
@@ -37,6 +42,16 @@ class Home extends React.Component {
         ...this.state,
         filterIndex: index,
     });
+  }
+
+  renderDarts()  {
+    var dartCheck = this.state.showDarts? dartCheck : dartUncheck;
+    return (
+      <Image
+        style={ styles.badge }
+        source={ dartCheck }
+      />
+    );
   }
 /****TEMP****/
   onPressButton() {
@@ -104,10 +119,12 @@ class Home extends React.Component {
                     activeTabTextStyle={{ color: '#f49f44' }} />
           <Text></Text>
 
-          <TouchableOpacity onPress={()=>{alert("In construction...")}}>
-            <Image source={require("../assets/darts_unchecked.png")} style={styles.badge}/>
+          <TouchableOpacity
+            onPress={ () => this.setState({ showDarts: !this.state.showDarts }) } 
+          >
+            {this.renderDarts()}
           </TouchableOpacity>
-
+          
           <Button
             large
             onPress={this.onPressButton}
@@ -129,7 +146,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   button: {
-    backgroundColor: "transparent",
+    backgroundColor: "black",
     borderColor: "#f49f44",
     borderWidth: 1,
     borderRadius: 10,
