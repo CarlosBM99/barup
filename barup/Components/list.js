@@ -33,6 +33,8 @@ class List extends Component {
         <Container style={styles.container}>
           <Content>
             <CardComponent />
+            <CardComponent />
+            <CardComponent />
           </Content>
         </Container>
     );
