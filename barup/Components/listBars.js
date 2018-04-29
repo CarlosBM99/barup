@@ -3,7 +3,6 @@ import { StyleSheet, Text, View, StatusBar, ListView, Image } from 'react-native
 import { Container, Content, Header, Form, Input, Item, Button, Label, Icon, List, ListItem, Card, CardItem, Thumbnail, Body, Left, Right} from 'native-base'
 
 import * as firebase from 'firebase';
-import CardComponent from './CardComponent';
 
 // Initialize Firebase
 const firebaseConfig = {
@@ -20,7 +19,7 @@ firebase.initializeApp(firebaseConfig);
 
 var data = []
 
-class Fire extends Component {
+class listBars extends Component {
 
   constructor(props) {
     super(props);
@@ -118,7 +117,7 @@ class Fire extends Component {
   }
 }
 
-export default Fire;
+export default listBars;
 
 const styles = StyleSheet.create({
   container: {

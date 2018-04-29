@@ -80,7 +80,7 @@ class Home extends Component {
           />
 
           <Button
-            onPress={() => this.props.navigation.navigate('Fire')}
+            onPress={() => this.props.navigation.navigate('listBars')}
             title="Search Bars"
             color="#841584"
             accessibilityLabel="Learn more about this purple button"
