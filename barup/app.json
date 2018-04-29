@@ -5,7 +5,10 @@
     "slug": "barup",
     "privacy": "public",
     "sdkVersion": "27.0.0",
-    "platforms": ["ios", "android"],
+    "platforms": [
+      "ios",
+      "android"
+    ],
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -21,7 +24,21 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.barup.com",
+      "publishBundlePath": "ios/barup/Supporting/shell-app.bundle",
+      "publishManifestPath": "ios/barup/Supporting/shell-app-manifest.json"
+    },
+    "isDetached": true,
+    "detach": {
+      "iosExpoViewUrl": "https://s3.amazonaws.com/exp-exponent-view-code/ios-v2.5.4-sdk27.0.0-e68cfb94-9b7e-4510-aab9-8f375e187b0b.tar.gz",
+      "androidExpoViewUrl": "https://s3.amazonaws.com/exp-exponent-view-code/android-v2.5.0-sdk27.0.0-52e1bcea-f10c-4bf8-bfd7-d1630727dec0.tar.gz"
+    },
+    "scheme": "expdbf33d3c310749b98a281d53579e824e",
+    "android": {
+      "package": "com.barup.com",
+      "publishBundlePath": "android/app/src/main/assets/shell-app.bundle",
+      "publishManifestPath": "android/app/src/main/assets/shell-app-manifest.json"
     }
   }
 }

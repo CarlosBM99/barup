@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from 'react-native'
 import { StackNavigator } from 'react-navigation'
 import Home from './Components/home'
 import List from './Components/list'
+import Fire from './Components/testfire'
 
 export default class App extends React.Component {
   render() {
@@ -20,6 +21,9 @@ const AppStackNavigator = StackNavigator({
   },
   List: {
     screen: List
+  },
+  Fire: {
+    screen: Fire
   }
 },
   {

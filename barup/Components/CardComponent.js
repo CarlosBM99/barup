@@ -15,9 +15,9 @@ class CardComponent extends Component {
     return (
         <Card>
           <CardItem style={{marginBottom:-20}}>
-            <Image source={require('../assets/bar1.jpg')} style={{marginTop:-10, height: 100, width: 130}}/>
+            <Image source={require('../assets/bar1.jpg')} style={{height: 100, width: 130}}/>
             <Body style={{paddingLeft: 10}}>
-              <Text>El bareto</Text>
+              <Text>{this.props.listViewData.val().name}</Text>
               <Text style={{marginTop: 10}}>Location</Text>
               <Item style={{marginTop: 10}}>
                 <Icon name="beer"/>
