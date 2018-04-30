@@ -4,12 +4,11 @@ import {
   StyleSheet, 
   Text, 
   View,
-  Picker,
   Image,
   Alert,
   TouchableOpacity,
   StatusBar,
-  TouchableHighlight
+  TouchableHighlight,
 } from 'react-native';
 import {Button} from 'react-native-elements'
 import {Dropdown} from 'react-native-material-dropdown'
@@ -28,11 +27,11 @@ class Home extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-        atmIndex: -1,
         filterIndex: -1,
         showDarts: false,
         showFootball: false,
         showBilliards: false,
+        PickerValue:'',
     }
   }
 
@@ -94,77 +93,77 @@ class Home extends React.Component {
 
   render() {
 
-    const atmposhpere = ['Luxurius','Youthful','Familiar','Hardcore'];
-    const filter = ["Beer Price","Rating","Crowd Level"];
+    let atm = [{
+      value: 'Luxurious',
+    }, {
+      value: 'Youthful',
+    }, {
+      value: 'Familiar',
+    }, {
+      value: 'Hardcore',
+    }
+    ];
+
+    let filter = [{
+      value: 'Beer Price',
+    }, {
+      value: 'Rating',
+    }, {
+      value: 'Crowd Level',
+    },
+    ];
 
     return (
       
-      <View style={{flex:1, padding:50, backgroundColor:"#4d4d4d"}}>
+      <View style={{flex:1, padding:50}}>
       <StatusBar barStyle="light-content"/>
           <View style={{flex:1, marginLeft:5}}>
-            <Item style={{backgroundColor:'white', paddingHorizontal: 10, borderRadius:10,marginBottom:15}}>
+            <Item style={{backgroundColor:'white', paddingHorizontal: 10, borderRadius:10}}>
               <Icon name="search" style={{fontSize: 20, paddingTop: 5}}/>
               <Input placeholder="Search for your city"/>
             </Item>
           
-          
-          
+             
 
           <Button
             onPress={this.onPressButton}
             title="Get your Location"
             buttonStyle = {styles.button}
-            style={{paddingBottom:20}}
+            style={{paddingBottom:20,marginTop:"5%"}}
           />
 
-          <Text style={styles.headerText}>Atmosphere</Text>
-          <SegmentedControlTab
+           <Dropdown
+            label='Atmosphere'
+            data={atm}
+          />
 
-                    values={atmposhpere}
-                    selectedIndex={this.state.atmIndex}
-                    onTabPress={this.handleAtmIndex}
-                    borderRadius={10}
-                    tabsContainerStyle={{ height: 50, backgroundColor: 'transparent'}}
-                    tabStyle={{ backgroundColor: '#F2F2F2', borderWidth: 2, borderColor: '#f49f44',width:"120%"}}
-                    activeTabStyle={{ backgroundColor: 'black', marginTop: 2 }}
-                    tabTextStyle={{ color: 'black',fontWeight:'bold'}}
-                    activeTabTextStyle={{ color: '#f49f44' }} />
-          <Text></Text>
+          <Dropdown
+            label='Order by'
+            data={filter}
+          />
 
-          <Text style={styles.headerText}>Filter by</Text>
-          <SegmentedControlTab
-
-                    values={filter}
-                    selectedIndex={this.state.filterIndex}
-                    onTabPress={this.handleFilterIndex}
-                    borderRadius={10}
-                    tabsContainerStyle={{ height: 50, backgroundColor: 'transparent'}}
-                    tabStyle={{ backgroundColor: '#F2F2F2', borderWidth: 2, borderColor: '#f49f44',width:"120%"}}
-                    activeTabStyle={{ backgroundColor: 'black', marginTop: 2 }}
-                    tabTextStyle={{ color: 'black',fontWeight:'bold'}}
-                    activeTabTextStyle={{ color: '#f49f44' }} />
-          <Text></Text>
-
-    <View style={{flexDirection:'row', marginTop:30, marginBottom:30}}>
+    <View style={{flexDirection:'row', marginTop:"10%", marginBottom:"10%"}}>
           <TouchableOpacity
             onPress={ () => this.setState({ showDarts: !this.state.showDarts }) } 
           >
             {this.renderDarts()}
             <Text style={styles.headerTextBadge}>Darts</Text>
+
           </TouchableOpacity>
 
           <TouchableOpacity
             onPress={ () => this.setState({ showFootball: !this.state.showFootball }) } 
           >
             {this.renderFootball()}
-            <Text style={styles.headerTextBadge}>Table Football</Text>
+            <Text style={styles.headerTextBadgeFootball}>Table Football</Text>
+
           </TouchableOpacity>
 
           <TouchableOpacity
             onPress={ () => this.setState({ showBilliards: !this.state.showBilliards }) } 
           >
             {this.renderBilliards()}
-            <Text style={styles.headerTextBadge}>Billiards</Text>
+            <Text style={styles.headerTextBadgeBilliards}>Billiards</Text>
           </TouchableOpacity>
     </View>
 
@@ -194,17 +193,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 10,
   },
-  inputBox: {
-    height:35,
-    width:300,
-    borderRadius: 25,
-    paddingHorizontal:16,
-    fontSize:20,
-    color:'#ffffff',
-    marginBottom: 30,
-    textAlign: "center",
-    flex: 1,
-  },
   headerText: {
     padding: 8,
     fontSize: 18,
@@ -213,8 +201,9 @@ const styles = StyleSheet.create({
   },
   badge: {
     borderRadius: 20,
+    borderColor:'black',
     padding: 10,
-    marginBottom: 20,
+    marginBottom: "10%",
     height:60,
     width:60,
     alignSelf:'center',
@@ -223,7 +212,23 @@ const styles = StyleSheet.create({
     padding: 8,
     fontSize: 18,
     fontWeight: "bold",
-    color: 'white',
+    color: 'black',
     alignSelf:'center',
+  },
+  headerTextBadgeFootball: {
+    padding: 8,
+    fontSize: 18,
+    fontWeight: "bold",
+    color: 'black',
+    alignSelf:'center',
+    marginTop: "-5%",
+  },
+  headerTextBadgeBilliards: {
+    padding: 8,
+    fontSize: 18,
+    fontWeight: "bold",
+    color: 'black',
+    alignSelf:'center',
+    marginTop: "-3%",
   },
 });
