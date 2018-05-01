@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { StyleSheet, Text, View, StatusBar, ListView, Image } from 'react-native';
+import { StyleSheet, Text, View, StatusBar, ListView, Image,TouchableOpacity } from 'react-native';
 import { Container, Content, Header, Form, Input, Item, Button, Label, Icon, List, ListItem, Card, CardItem, Thumbnail, Body, Left, Right} from 'native-base'
 
 import * as firebase from 'firebase';
@@ -47,16 +47,12 @@ class listBars extends Component {
 
   }
 
+
   static navigationOptions = {
-    title: 'List of bars',
-    headerStyle: {
-      backgroundColor: '#cccc',
-    },
-    headerTintColor: '#fff',
-    headerTitleStyle: {
-      fontWeight: 'bold',
-    },
-    headerRight: <Icon style={{ paddingRight: 10, color: 'white' }} name="ios-star" />
+    title: "BarUp",
+    headerRight: <Icon style={{ paddingRight: 20, color: "#fed849" }} name="ios-star"/>,
+    headerStyle : { backgroundColor: 'black' },
+    headerTitleStyle: { color: '#fed849' },
   }
 
   render() {
