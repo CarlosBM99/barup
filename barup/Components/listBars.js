@@ -61,6 +61,7 @@ class listBars extends Component {
 
   render() {
     return (
+      
       <Container style={styles.container}>
         <Content>
           <List

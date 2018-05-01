@@ -16,12 +16,12 @@ import {Icon,Input,Item,} from 'native-base'
 import { TabNavigator}  from 'react-navigation'
 import SegmentedControlTab from 'react-native-segmented-control-tab';
 
-const dartCheck = require('../assets/darts_checked.png');
-const dartUncheck = require('../assets/darts_unchecked.png');
-const footballCheck = require('../assets/football_checked.png');
-const footballUncheck = require('../assets/football_unchecked.png');
-const billiardsCheck = require('../assets/billiards_checked.png');
-const billiardsUncheck = require('../assets/billiards_unchecked.png');
+const dartCheck = require('../assets/dart_check.png');
+const dartUncheck = require('../assets/dart.png');
+const footballCheck = require('../assets/football_check.png');
+const footballUncheck = require('../assets/football.png');
+const billiardsCheck = require('../assets/billiards_check.png');
+const billiardsUncheck = require('../assets/billiards.png');
 
 class Home extends React.Component {
   constructor(props) {
@@ -33,20 +33,6 @@ class Home extends React.Component {
         showBilliards: false,
         PickerValue:'',
     }
-  }
-
-  handleAtmIndex = (index) => {
-    this.setState({
-        ...this.state,
-        atmIndex: index,
-    });
-  }
-
-  handleFilterIndex = (index) => {
-    this.setState({
-        ...this.state,
-        filterIndex: index,
-    });
   }
 
   renderDarts()  {
@@ -82,7 +68,7 @@ class Home extends React.Component {
   onPressButton() {
     Alert.alert('You tapped the button!')
   }
-/******+*****/
+/************/
 
   static navigationOptions = {
     title: "BarUp",
@@ -142,20 +128,17 @@ class Home extends React.Component {
             data={filter}
           />
 
-    <View style={{flexDirection:'row', marginTop:"10%", marginBottom:"10%"}}>
+    <View style={{flexDirection:'row', marginTop:"10%", marginBottom:"10%",marginLeft:"-8%"}}>
           <TouchableOpacity
             onPress={ () => this.setState({ showDarts: !this.state.showDarts }) } 
           >
             {this.renderDarts()}
-            <Text style={styles.headerTextBadge}>Darts</Text>
-
           </TouchableOpacity>
 
           <TouchableOpacity
             onPress={ () => this.setState({ showFootball: !this.state.showFootball }) } 
           >
             {this.renderFootball()}
-            <Text style={styles.headerTextBadgeFootball}>Table Football</Text>
 
           </TouchableOpacity>
 
@@ -163,7 +146,6 @@ class Home extends React.Component {
             onPress={ () => this.setState({ showBilliards: !this.state.showBilliards }) } 
           >
             {this.renderBilliards()}
-            <Text style={styles.headerTextBadgeBilliards}>Billiards</Text>
           </TouchableOpacity>
     </View>
 
@@ -201,35 +183,10 @@ const styles = StyleSheet.create({
     color: 'white'
   },
   badge: {
-    borderRadius: 20,
-    borderColor:'black',
-    padding: 10,
+    padding: 50,
     marginBottom: "10%",
-    height:60,
-    width:60,
+    height:100,
+    width:100,
     alignSelf:'center',
-  },
-  headerTextBadge: {
-    padding: 8,
-    fontSize: 18,
-    fontWeight: "bold",
-    color: 'black',
-    alignSelf:'center',
-  },
-  headerTextBadgeFootball: {
-    padding: 8,
-    fontSize: 18,
-    fontWeight: "bold",
-    color: 'black',
-    alignSelf:'center',
-    marginTop: "-5%",
-  },
-  headerTextBadgeBilliards: {
-    padding: 8,
-    fontSize: 18,
-    fontWeight: "bold",
-    color: 'black',
-    alignSelf:'center',
-    marginTop: "-3%",
   },
 });
