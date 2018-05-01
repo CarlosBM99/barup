@@ -28,9 +28,7 @@ class listBars extends Component {
 
     this.state = {
       listViewData: data,
-      newContact: ""
     }
-
   }
 
   componentDidMount() {
@@ -44,15 +42,18 @@ class listBars extends Component {
       that.setState({ listViewData: newData })
 
     })
-
   }
 
-
   static navigationOptions = {
-    title: "BarUp",
-    headerRight: <Icon style={{ paddingRight: 20, color: "#fed849" }} name="ios-star"/>,
-    headerStyle : { backgroundColor: 'black' },
+    headerTitle: "BarUp",
+    headerTintColor:"#fed849",
+    headerRight: <Icon style={{color: "#fed849" }} name="ios-star"/>,
     headerTitleStyle: { color: '#fed849' },
+    headerStyle:{
+      paddingRight: 10,
+      paddingLeft: 5,
+      backgroundColor: 'black'
+    }
   }
 
   render() {
@@ -60,11 +61,11 @@ class listBars extends Component {
       
       <Container style={styles.container}>
         <Content>
-          <List
+          <ListView
             enableEmptySections
             dataSource={this.ds.cloneWithRows(this.state.listViewData)}
             renderRow={data =>
-                <Card>
+              <Card>
                 <CardItem style={{marginBottom:-20}}>
                   <Image source={require('../assets/bar1.jpg')} style={{height: 100, width: 130}}/>
                   <Body style={{paddingLeft: 10}}>
@@ -100,12 +101,6 @@ class listBars extends Component {
                 </CardItem>
               </Card>
             }
-            renderLeftHiddenRow={data =>
-              <Button full onPress={() => this.addRow(data)} >
-                <Icon name="information-circle" />
-              </Button>
-            }
-
           />
 
         </Content>
@@ -121,5 +116,5 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
 
-  },
+  }
 });

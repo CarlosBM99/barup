@@ -72,9 +72,10 @@ class Home extends React.Component {
 
   static navigationOptions = {
     title: "BarUp",
-    headerRight: <Icon style={{ paddingRight: 20, color: "#fed849" }} name="ios-star"/>,
+    headerRight: <Icon style={{ paddingRight: 10, color: "#fed849" }} name="ios-star"/>,
     headerStyle : { backgroundColor: 'black' },
     headerTitleStyle: { color: '#fed849' },
+    headerBackTitle: null,
   }
 
   render() {
