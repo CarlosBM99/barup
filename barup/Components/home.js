@@ -129,7 +129,8 @@ class Home extends React.Component {
             data={filter}
           />
 
-    <View style={{flexDirection:'row', marginTop:"10%", marginBottom:"10%",marginLeft:"-8%"}}>
+    <View style={{flexDirection:'row', justifyContent: 'center',
+    alignItems: 'center'}}>
           <TouchableOpacity
             onPress={ () => this.setState({ showDarts: !this.state.showDarts }) } 
           >
