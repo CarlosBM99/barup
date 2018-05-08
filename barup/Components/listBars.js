@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { StyleSheet, Text, View, StatusBar, ListView, Image,TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, StatusBar, ListView, Image,TouchableOpacity, FlatList, Dimensions } from 'react-native';
 import { Container, Content, Header, Form, Input, Item, Button, Label, Icon, List, ListItem, Card, CardItem, Thumbnail, Body, Left, Right} from 'native-base'
 
 import * as firebase from 'firebase';
@@ -17,10 +17,15 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 
-var data = []
+const data = [
+  /* { key: 'A' }, { key: 'B' }, { key: 'C' }, { key: 'D' }, { key: 'E' }, { key: 'F' }, { key: 'G' }, { key: 'H' }, { key: 'I' }, { key: 'J' },
+  // { key: 'K' },
+  // { key: 'L' }, */
+];
 
+const numColumns = 3;
 class listBars extends Component {
-
+  
   constructor(props) {
     super(props);
     
@@ -28,9 +33,34 @@ class listBars extends Component {
 
     this.state = {
       listViewData: data,
+      st: false,
+    }
+  }
+  static navigationOptions = { 
+    headerTitle: "BarUp", 
+    headerTintColor:"#fed849", 
+    headerRight: <Icon style={{color: "#fed849" }} name="ios-star"/>, 
+    headerTitleStyle: { color: '#fed849' }, 
+    headerStyle:{ 
+      paddingRight: 10, 
+      paddingLeft: 5, 
+      backgroundColor: 'black'
     }
   }
 
+  renderItem = ({ item, index }) => {
+    //console.log(item)
+    //console.log("IN")
+    //console.log(item.val().name)
+
+    return (
+      <View
+        style={styles.item}
+      >
+        <Text style={styles.itemText}>{item.val().name} <Icon name="beer"></Icon></Text>
+      </View>
+    );
+  };
   componentDidMount() {
 
     var that = this
@@ -39,82 +69,63 @@ class listBars extends Component {
 
       var newData = [...that.state.listViewData]
       newData.push(data)
-      that.setState({ listViewData: newData })
+      that.setState({ listViewData: newData,  st: true })
 
     })
-  }
 
-  static navigationOptions = {
-    headerTitle: "BarUp",
-    headerTintColor:"#fed849",
-    headerRight: <Icon style={{color: "#fed849" }} name="ios-star"/>,
-    headerTitleStyle: { color: '#fed849' },
-    headerStyle:{
-      paddingRight: 10,
-      paddingLeft: 5,
-      backgroundColor: 'black'
-    }
   }
-
-  render() {
+  
+  /* getdata() {
+    console.log("AAAAAAA")
+    var a = []
+    var count = 0
+    var recentPostsRef = firebase.database().ref('/bars');
+    //console.log(recentPostsRef)
+    recentPostsRef.on("child_added", function(snapshot) {
+      //count++;
+      //console.log(snapshot.val(),count);
+      //console.log("EEEE")
+      a.push(snapshot.val())
+      //console.log(a)
+      return a
+      //this.setState({ listViewData: snapshot.val() })
+    })
+    //console.log(this.state.stores)
+    
+    //console.log("OUTTTTTTTT")
+    //console.log(a)
+    
+    //return data
+  } */
+  render() { 
     return (
-      
-      <Container style={styles.container}>
-        <Content>
-          <ListView
-            enableEmptySections
-            dataSource={this.ds.cloneWithRows(this.state.listViewData)}
-            renderRow={data =>
-              <Card>
-                <CardItem style={{marginBottom:-20}}>
-                  <Image source={require('../assets/bar1.jpg')} style={{height: 100, width: 130}}/>
-                  <Body style={{paddingLeft: 10}}>
-                    <Text>{data.val().name}</Text>
-                    <Text style={{marginTop: 10}}>Location</Text>
-                    <Item style={{marginTop: 10}}>
-                      <Icon name="beer"/>
-                      <Icon name="beer"/>
-                      <Icon name="beer"/>
-                      <Icon name="beer"/>
-                    </Item>
-                  </Body>
-                  <Right style={{marginTop:-50, marginRight:10}}>
-                    <Icon style={{fontSize: 40, color: 'black'}} name="star"/>
-                  </Right>
-                </CardItem>
-                <CardItem style={{marginTop:0, height:45}}>
-                  <Item style={{height:36, width:36}} rounded>
-                    <Icon style={{fontSize: 20, color: 'red'}} name="pizza"/>
-                  </Item>
-                  <Item style={{height:36, width:36}} rounded>
-                    <Icon style={{fontSize: 20, color: 'green'}} name="eye"/>
-                  </Item>
-                  <Item style={{height:36, width:36}} rounded>
-                    <Icon style={{fontSize: 20, color: 'blue'}} name="home"/>
-                  </Item>
-                  <Text style={{marginLeft:20, fontSize:20}}> 1,45€ <Text style={{fontSize:10}}>/Beer</Text>
-                  </Text>
-                  <Text style={{marginLeft:30, fontSize:20}}>
-                    Full
-                  </Text>
-                  <Icon style={{marginLeft:5}} name="information-circle"/>
-                </CardItem>
-              </Card>
-            }
-          />
-
-        </Content>
-      </Container>
+      <FlatList
+        data={this.state.listViewData}
+        style={styles.container}
+        renderItem={this.renderItem}
+      />
     );
   }
 }
-
 export default listBars;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-
-  }
+    //marginVertical: 20,
+  },
+  item: {
+    backgroundColor: '#dce3ef',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1,
+    margin: 1,
+    height: Dimensions.get('window').width / numColumns, // approximate a square
+  },
+  itemInvisible: {
+    backgroundColor: 'transparent',
+  },
+  itemText: {
+    color: 'black',
+  },
 });

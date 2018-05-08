@@ -150,11 +150,10 @@ class Home extends React.Component {
             {this.renderBilliards()}
           </TouchableOpacity>
     </View>
-
+        
           <Button
             large
-            onPress={this.onPressButton}
-            onPress={() => this.props.navigation.navigate('listBars')}
+            onPress={() => this.props.navigation.navigate('listBars')  }
             title="Search Bars"
             buttonStyle={styles.button}
           />
@@ -163,6 +162,7 @@ class Home extends React.Component {
     );
   }
 }
+
 
 export default Home;
 
