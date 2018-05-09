@@ -49,9 +49,56 @@ class listBars extends Component {
 
   renderItem = ({ item }) => {
     return (
-      <View style={styles.item}>
-        <Text style={styles.itemText}>{item.val().name}<Icon name="beer"></Icon></Text>
-      </View>
+      //<View style={styles.item}>
+      <Card style={{flex:1}}>
+        <CardItem style={{marginBottom:-20}}>
+          <Image source={require('../assets/bar1.jpg')} style={styles.imag}/>
+          <Body style={{paddingLeft: 10}}>
+            <Text>{item.val().name}</Text>
+            <Text style={{marginTop: 10}}>Location</Text>
+            <Item style={{marginTop: 10}}>
+              <Icon name="beer"/>
+              <Icon name="beer"/>
+              <Icon name="beer"/>
+              <Icon name="beer"/>
+            </Item>
+          </Body>
+          <Right style={{marginTop:-50, marginRight:10}}>
+            <Icon style={{fontSize: 40, color: 'black'}} name="star"/>
+          </Right>
+        </CardItem>
+        <CardItem style={{flex:1,marginTop:0, height:45}}>
+          <View style={{flex:1,flexDirection:'row', justifyContent: 'center',
+      alignItems: 'center'}}>
+              <View style={{flexDirection:'row'}}>
+                <Item style={{height:36, width:36}} rounded>
+                  <Icon style={{fontSize: 20, color: 'red'}} name="pizza"/>
+                </Item>
+                <Item style={{height:36, width:36}} rounded>
+                  <Icon style={{fontSize: 20, color: 'green'}} name="eye"/>
+                </Item>
+                <Item style={{height:36, width:36}} rounded>
+                  <Icon style={{fontSize: 20, color: 'blue'}} name="home"/>
+                </Item>
+                </View>
+
+            <View style={{flex:1,flexDirection:'row', justifyContent: 'center',
+        alignItems: 'center', marginLeft:10}}>
+              <Text style={{marginLeft:10,fontSize:20}}> 1,45€ 
+              </Text><Text style={{fontSize:13,marginRight:25,marginTop:10}}>/Beer</Text>
+            </View>
+            <View style={{flexDirection:'row', justifyContent: 'center',
+      alignItems: 'center'}}>
+              <Text style={{fontSize:20}}>
+                Full
+              </Text>
+              <Icon style={{marginLeft:5}} name="information-circle"/>
+            </View>
+          </View>
+        </CardItem>
+      </Card>
+        
+      //</View>
     );
   };
   componentDidMount() {
@@ -62,6 +109,9 @@ class listBars extends Component {
       newData.push(snapshot)
       that.setState({ listViewData: newData})
     })
+  }
+  componentWillUnmount(){
+    this.setState({ listViewData: data})
   }
   render() { 
     return (
@@ -86,7 +136,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     flex: 1,
     margin: 1,
-    height: Dimensions.get('window').width / numColumns, // approximate a square
+    //height: (Dimensions.get('window').width / numColumns) + 20, // approximate a square
+  },
+  imag:{
+    flex: 1,
+    height: 100, 
+    width: 100
   },
   itemInvisible: {
     backgroundColor: 'transparent',
