@@ -153,7 +153,7 @@ class Home extends React.Component {
         
           <Button
             large
-            onPress={() => this.props.navigation.navigate('listBars')  }
+            onPress={() => this.props.navigation.navigate('listBars',{listViewData: ["A"], st:true})  }
             title="Search Bars"
             buttonStyle={styles.button}
           />

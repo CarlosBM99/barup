@@ -32,8 +32,7 @@ class listBars extends Component {
     this.ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
 
     this.state = {
-      listViewData: data,
-      st: false,
+      listViewData: data
     }
   }
   static navigationOptions = { 
@@ -48,55 +47,22 @@ class listBars extends Component {
     }
   }
 
-  renderItem = ({ item, index }) => {
-    //console.log(item)
-    //console.log("IN")
-    //console.log(item.val().name)
-
+  renderItem = ({ item }) => {
     return (
-      <View
-        style={styles.item}
-      >
-        <Text style={styles.itemText}>{item.val().name} <Icon name="beer"></Icon></Text>
+      <View style={styles.item}>
+        <Text style={styles.itemText}>{item.val().name}<Icon name="beer"></Icon></Text>
       </View>
     );
   };
   componentDidMount() {
-
     var that = this
-
-    firebase.database().ref('/bars').on('child_added', function (data) {
-
-      var newData = [...that.state.listViewData]
-      newData.push(data)
-      that.setState({ listViewData: newData,  st: true })
-
+    var newData = [...that.state.listViewData]
+    var ref = firebase.database().ref('/bars') 
+    ref.on("child_added", function(snapshot) {
+      newData.push(snapshot)
+      that.setState({ listViewData: newData})
     })
-
   }
-  
-  /* getdata() {
-    console.log("AAAAAAA")
-    var a = []
-    var count = 0
-    var recentPostsRef = firebase.database().ref('/bars');
-    //console.log(recentPostsRef)
-    recentPostsRef.on("child_added", function(snapshot) {
-      //count++;
-      //console.log(snapshot.val(),count);
-      //console.log("EEEE")
-      a.push(snapshot.val())
-      //console.log(a)
-      return a
-      //this.setState({ listViewData: snapshot.val() })
-    })
-    //console.log(this.state.stores)
-    
-    //console.log("OUTTTTTTTT")
-    //console.log(a)
-    
-    //return data
-  } */
   render() { 
     return (
       <FlatList
@@ -104,7 +70,7 @@ class listBars extends Component {
         style={styles.container}
         renderItem={this.renderItem}
       />
-    );
+    )
   }
 }
 export default listBars;
