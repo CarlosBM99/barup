@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from 'react-native'
 import { StackNavigator } from 'react-navigation'
 import Home from './Components/home'
 import listBars from './Components/listBars'
+import Detail from './Components/Detail'
 
 export default class App extends React.Component {
   render() {
@@ -20,14 +21,14 @@ const AppStackNavigator = StackNavigator({
   },
   listBars: {
     screen: listBars
-  }
+  },
+  Detail: {screen: Detail},
 },
   {
     navigationOptions: {
       gesturesEnabled: false
     }
 })
-
 
 const styles = StyleSheet.create({
   container: {

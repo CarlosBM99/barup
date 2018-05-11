@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { StyleSheet, Text, View, StatusBar, ListView, Image,TouchableOpacity, FlatList, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, StatusBar, ListView, Image,TouchableOpacity, FlatList, Dimensions, TouchableHighlight } from 'react-native';
 import { Container, Content, Header, Form, Input, Item, Button, Label, Icon, List, ListItem, Card, CardItem, Thumbnail, Body, Left, Right} from 'native-base'
 
 import * as firebase from 'firebase';
@@ -44,12 +44,19 @@ class listBars extends Component {
       paddingRight: 10, 
       paddingLeft: 5, 
       backgroundColor: 'black'
-    }
+    },
+    headerBackTitle: null,
+  }
+  goToNextScreen = () => {
+    const { navigate } = this.props.navigation;
+    return navigate('Detail');
   }
 
   renderItem = ({ item }) => {
+    //function to go to next screen
     return (
       //<View style={styles.item}>
+      <TouchableHighlight onPress={() => this.goToNextScreen()}>
       <Card style={{flex:1}}>
         <CardItem style={{marginBottom:-20}}>
           <Image source={require('../assets/bar1.jpg')} style={styles.imag}/>
@@ -97,8 +104,7 @@ class listBars extends Component {
           </View>
         </CardItem>
       </Card>
-        
-      //</View>
+      </TouchableHighlight>
     );
   };
   componentDidMount() {
