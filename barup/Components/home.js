@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import {Button} from 'react-native-elements'
 import {Dropdown} from 'react-native-material-dropdown'
-import {Icon,Input,Item,} from 'native-base'
+import {Icon,Input,Item,CheckBox,Body,ListItem, Content, Container} from 'native-base'
 import { TabNavigator}  from 'react-navigation'
 import SegmentedControlTab from 'react-native-segmented-control-tab';
 
@@ -27,11 +27,15 @@ class Home extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-        filterIndex: -1,
         showDarts: false,
         showFootball: false,
         showBilliards: false,
-        PickerValue:'',
+        familiar: false,
+        youthful: false,
+        luxurious: false,
+        beerPrice: false,
+        rating: false,
+        crowdness: false,
     }
   }
 
@@ -64,6 +68,7 @@ class Home extends React.Component {
       />
     );
   }
+
 /****TEMP****/
   onPressButton() {
     Alert.alert('You tapped the button!')
@@ -80,26 +85,6 @@ class Home extends React.Component {
 
   render() {
 
-    let atm = [{
-      value: 'Luxurious',
-    }, {
-      value: 'Youthful',
-    }, {
-      value: 'Familiar',
-    }, {
-      value: 'Hardcore',
-    }
-    ];
-
-    let filter = [{
-      value: 'Beer Price',
-    }, {
-      value: 'Rating',
-    }, {
-      value: 'Crowd Level',
-    },
-    ];
-
     return (
       
       <View style={{flex:1, padding:50}}>
@@ -108,29 +93,58 @@ class Home extends React.Component {
             <Item style={{backgroundColor:'white', paddingHorizontal: 10, borderRadius:10}}>
               <Icon name="search" style={{fontSize: 20, paddingTop: 5}}/>
               <Input placeholder="Search for your city"/>
-            </Item>
-          
-             
+              <Icon name="locate" style={{fontSize: 30, paddingTop: 5}}/>
+            </Item>  
+            
 
-          <Button
-            onPress={this.onPressButton}
-            title="Get your Location"
-            buttonStyle = {styles.button}
-            style={{paddingBottom:20,marginTop:"5%"}}
-          />
+        <ListItem style={{marginLeft:"-5%", marginTop:"10%"}}>
+          <Text style={{fontWeight:"bold",fontSize:15}}>Bar Style</Text>
+        </ListItem>
+        <Content style={{width:"130%", marginLeft:"-15%"}}>
+          <ListItem>
+            <CheckBox checked={this.state.familiar} color="black" onPress={ () => this.setState({ familiar: !this.state.familiar })}/>
+            <Body>
+              <Text>   Familiar</Text>
+            </Body>
 
-           <Dropdown
-            label='Atmosphere'
-            data={atm}
-          />
+            <CheckBox checked={this.state.youthful} color="black" onPress={ () => this.setState({ youthful: !this.state.youthful })}/>
+            <Body>
+              <Text>   Youthful</Text>
+            </Body>
 
-          <Dropdown
-            label='Order by'
-            data={filter}
-          />
+            <CheckBox checked={this.state.luxurious} color="black" onPress={ () => this.setState({ luxurious: !this.state.luxurious })}/>
+            <Body>
+              <Text>   Luxurious</Text>
+            </Body>
+          </ListItem>
+        </Content>
+
+      <Container style={{marginTop:"-30%"}}>
+        <ListItem style={{marginLeft:"-5%"}}>
+          <Text style={{fontWeight:"bold",fontSize:15}}>Order by</Text>
+        </ListItem>
+        <Content style={{width:"130%", marginLeft:"-15%"}}>
+          <ListItem>
+            <CheckBox checked={this.state.beerPrice} color="black" onPress={ () => this.setState({ beerPrice: !this.state.beerPrice })}/>
+            <Body>
+              <Text>   Beer Price</Text>
+            </Body>
+
+            <CheckBox checked={this.state.rating} color="black" onPress={ () => this.setState({ rating: !this.state.rating })}/>
+            <Body>
+              <Text>   Rating</Text>
+            </Body>
+
+            <CheckBox checked={this.state.crowdness} color="black" onPress={ () => this.setState({ crowdness: !this.state.crowdness })}/>
+            <Body>
+              <Text>   Crowdness</Text>
+            </Body>
+          </ListItem>
+        </Content>
+      </Container>
 
     <View style={{flexDirection:'row', justifyContent: 'center',
-    alignItems: 'center'}}>
+    alignItems: 'center', paddingVertical:"10%"}}>
           <TouchableOpacity
             onPress={ () => this.setState({ showDarts: !this.state.showDarts }) } 
           >
@@ -191,4 +205,7 @@ const styles = StyleSheet.create({
     width:100,
     alignSelf:'center',
   },
+  checkbox: {
+
+  }
 });

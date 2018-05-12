@@ -17,11 +17,7 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 
-const data = [
-  /* { key: 'A' }, { key: 'B' }, { key: 'C' }, { key: 'D' }, { key: 'E' }, { key: 'F' }, { key: 'G' }, { key: 'H' }, { key: 'I' }, { key: 'J' },
-  // { key: 'K' },
-  // { key: 'L' }, */
-];
+const data = [];
 
 const numColumns = 3;
 class listBars extends Component {
@@ -62,7 +58,7 @@ class listBars extends Component {
           <Image source={require('../assets/bar1.jpg')} style={styles.imag}/>
           <Body style={{paddingLeft: 10}}>
             <Text>{item.val().name}</Text>
-            <Text style={{marginTop: 10}}>Location</Text>
+            <Text style={{marginTop: 10}}>{item.val().location}</Text>
             <Item style={{marginTop: 10}}>
               <Icon name="beer"/>
               <Icon name="beer"/>
@@ -70,7 +66,7 @@ class listBars extends Component {
               <Icon name="beer"/>
             </Item>
           </Body>
-          <Right style={{marginTop:-50, marginRight:10}}>
+          <Right style={{marginTop:-50}}>
             <Icon style={{fontSize: 40, color: 'black'}} name="star"/>
           </Right>
         </CardItem>
@@ -91,13 +87,13 @@ class listBars extends Component {
 
             <View style={{flex:1,flexDirection:'row', justifyContent: 'center',
         alignItems: 'center', marginLeft:10}}>
-              <Text style={{marginLeft:10,fontSize:20}}> 1,45€ 
-              </Text><Text style={{fontSize:13,marginRight:25,marginTop:10}}>/Beer</Text>
+              <Text style={{marginLeft:10,fontSize:20}}> {item.val().beerPrice}€
+              </Text><Text style={{fontSize:13,marginRight:25,marginTop:10}}> /Beer</Text>
             </View>
             <View style={{flexDirection:'row', justifyContent: 'center',
       alignItems: 'center'}}>
               <Text style={{fontSize:20}}>
-                Full
+                {item.val().crowd}
               </Text>
               <Icon style={{marginLeft:5}} name="information-circle"/>
             </View>
@@ -122,6 +118,7 @@ class listBars extends Component {
   render() { 
     return (
       <FlatList
+        backgroundColor="black"
         data={this.state.listViewData}
         style={styles.container}
         renderItem={this.renderItem}
