@@ -19,6 +19,19 @@ firebase.initializeApp(firebaseConfig);
 
 const data = [];
 
+dartBadge = require('../assets/dart_badge.png');
+footballBadge = require('../assets/football_badge.png');
+billiardsBadge = require('../assets/billiards_badge.png');
+emptyBadge = null;
+
+barImages = [
+  require('../assets/bar1.jpg'),
+  require('../assets/bar2.jpg'),
+  require('../assets/bar3.jpg'),
+  require('../assets/bar4.jpg'),
+  require('../assets/bar5.jpg'),
+]
+
 const numColumns = 3;
 class listBars extends Component {
   
@@ -28,7 +41,7 @@ class listBars extends Component {
     this.ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
 
     this.state = {
-      listViewData: data
+      listViewData: data,
     }
   }
   static navigationOptions = { 
@@ -48,6 +61,46 @@ class listBars extends Component {
     return navigate('Detail');
   }
 
+  renderDartsBadge(item)  {
+    showDartBadge = item.val().darts;
+    var tempDartBadge = showDartBadge? dartBadge : emptyBadge;
+    return (
+      <Image
+        style={{height:34, width:34}} 
+        source={ tempDartBadge }
+      />
+    );
+  }
+
+  renderFootballBadge(item)  {
+    showFootballBadge = item.val().football;
+    var tempFootballBadge = showFootballBadge? footballBadge : emptyBadge;
+    return (
+      <Image
+        style={{height:34, width:34}} 
+        source={ tempFootballBadge }
+      />
+    );
+  }
+
+  renderBilliardsBadge(item)  {
+    showBilliardsBadge = item.val().billiards;
+    var tempBilliardsBadge = showBilliardsBadge? billiardsBadge : emptyBadge;
+    return (
+      <Image
+        style={{height:34, width:34}} 
+        source={ tempBilliardsBadge }
+      />
+    );
+  }
+
+  renderBarImage(item)  {
+    var barID = item.val().id;
+    return (
+      <Image source={barImages[barID]} style={styles.imag}/>
+    );
+  }
+
   renderItem = ({ item }) => {
     //function to go to next screen
     return (
@@ -55,9 +108,9 @@ class listBars extends Component {
       <TouchableHighlight onPress={() => this.goToNextScreen()}>
       <Card style={{flex:1}}>
         <CardItem style={{marginBottom:-20}}>
-          <Image source={require('../assets/bar1.jpg')} style={styles.imag}/>
+          {this.renderBarImage(item)}
           <Body style={{paddingLeft: 10}}>
-            <Text>{item.val().name}</Text>
+            <Text style={{fontWeight:'bold', fontSize:17}}>{item.val().name}</Text>
             <Text style={{marginTop: 10}}>{item.val().location}</Text>
             <Item style={{marginTop: 10}}>
               <Icon name="beer"/>
@@ -73,16 +126,10 @@ class listBars extends Component {
         <CardItem style={{flex:1,marginTop:0, height:45}}>
           <View style={{flex:1,flexDirection:'row', justifyContent: 'center',
       alignItems: 'center'}}>
-              <View style={{flexDirection:'row'}}>
-                <Item style={{height:36, width:36}} rounded>
-                  <Icon style={{fontSize: 20, color: 'red'}} name="pizza"/>
-                </Item>
-                <Item style={{height:36, width:36}} rounded>
-                  <Icon style={{fontSize: 20, color: 'green'}} name="eye"/>
-                </Item>
-                <Item style={{height:36, width:36}} rounded>
-                  <Icon style={{fontSize: 20, color: 'blue'}} name="home"/>
-                </Item>
+              <View style={{flexDirection:'row', marginHorizontal:"2%"}}>
+                {this.renderDartsBadge(item)}
+                {this.renderFootballBadge(item)}
+                {this.renderBilliardsBadge(item)}
                 </View>
 
             <View style={{flex:1,flexDirection:'row', justifyContent: 'center',
