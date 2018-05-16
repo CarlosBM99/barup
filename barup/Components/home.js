@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   StatusBar,
   TouchableHighlight,
+  ActivityIndicator,
 } from 'react-native';
 import {Button} from 'react-native-elements'
 import {Dropdown} from 'react-native-material-dropdown'
@@ -23,6 +24,25 @@ const footballUncheck = require('../assets/football.png');
 const billiardsCheck = require('../assets/billiards_check.png');
 const billiardsUncheck = require('../assets/billiards.png');
 
+import * as firebase from 'firebase';
+// Initialize Firebase
+const firebaseConfig = {
+  // ADD YOUR FIREBASE CREDENTIALS
+  apiKey: "AIzaSyASl36A_6t0BQkhrZ22bu0Gu7v1xWj5jlM",
+  authDomain: "barup-ca0f9.firebaseapp.com",
+  databaseURL: "https://barup-ca0f9.firebaseio.com",
+  projectId: "barup-ca0f9",
+  storageBucket: "barup-ca0f9.appspot.com",
+  messagingSenderId: "1060030692240"
+};
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
+
+
+var key = "A"
+
+
 class Home extends React.Component {
   constructor(props) {
     super(props);
@@ -36,6 +56,8 @@ class Home extends React.Component {
         beerPrice: false,
         rating: false,
         crowdness: false,
+        loading: false,
+        st: 0
     }
   }
 
@@ -82,11 +104,48 @@ class Home extends React.Component {
     headerTitleStyle: { color: '#fed849' },
     headerBackTitle: null,
   }
-
+  a(props){
+    this.setState({
+      loading: true
+    });
+    var that = this
+    var int = setInterval(() => {
+      //console.log("a")
+      var ref = firebase.database().ref('/status_search/')
+      ref.once("value")
+        .then(function(snapshot) {
+          var key = snapshot.key; // "ada"
+          var childKey = snapshot.child("/state").val(); // "last"
+          console.log(childKey)
+          if(childKey === 1){
+            that.setState({
+              st: childKey,
+          })
+        }
+        });
+        
+        if(this.state.st === 1){
+          that.setState({
+            loading: false,
+          })
+          props.navigation.navigate('listBars',{listViewData: ["A"]})
+          clearInterval(int);
+        }
+      
+    }, 500);
+    
+    console.log("IN")
+    //key = firebase.database().ref('/status_search').push().key
+    //firebase.database().ref('/status_search').child(key).set({ name: "AAAAAA" })
+  }
+  b(){
+    console.log("OUT")
+    console.log(key)
+    firebase.database().ref('status_search/' + key).set(null)
+  }
   render() {
 
     return (
-      
       <View style={{flex:1, padding:50}}>
       <StatusBar barStyle="light-content"/>
           <View style={{flex:1, marginLeft:5}}>
@@ -167,10 +226,18 @@ class Home extends React.Component {
         
           <Button
             large
-            onPress={() => this.props.navigation.navigate('listBars',{listViewData: ["A"], st:true})  }
+            onPress={() => this.a(this.props) }            
+            //onPress={() => this.props.navigation.navigate('listBars',{listViewData: ["A"], st:true})  }
             title="Search Bars"
             buttonStyle={styles.button}
+            
           />
+          <View style={styles.modalBackground}>
+            <View style={styles.activityIndicatorWrapper}>
+              <ActivityIndicator
+                animating={this.state.loading} />
+            </View>
+          </View>
         </View>
         </View>
     );
@@ -204,5 +271,21 @@ const styles = StyleSheet.create({
     height:100,
     width:100,
     alignSelf:'center',
-  }
+  },
+  activityIndicatorWrapper: {
+    backgroundColor: '#FFFFFF',
+    height: 100,
+    width: 100,
+    borderRadius: 10,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-around'
+  },
+  modalBackground: {
+    flex: 1,
+    alignItems: 'center',
+    flexDirection: 'column',
+    justifyContent: 'space-around',
+    backgroundColor: '#00000040'
+  },
 });

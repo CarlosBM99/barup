@@ -3,19 +3,19 @@ import { StyleSheet, Text, View, StatusBar, ListView, Image,TouchableOpacity, Fl
 import { Container, Content, Header, Form, Input, Item, Button, Label, Icon, List, ListItem, Card, CardItem, Thumbnail, Body, Left, Right} from 'native-base'
 
 import * as firebase from 'firebase';
-
 // Initialize Firebase
 const firebaseConfig = {
-    // ADD YOUR FIREBASE CREDENTIALS
-    apiKey: "AIzaSyASl36A_6t0BQkhrZ22bu0Gu7v1xWj5jlM",
-    authDomain: "barup-ca0f9.firebaseapp.com",
-    databaseURL: "https://barup-ca0f9.firebaseio.com",
-    projectId: "barup-ca0f9",
-    storageBucket: "barup-ca0f9.appspot.com",
-    messagingSenderId: "1060030692240"
-  };
-
-firebase.initializeApp(firebaseConfig);
+  // ADD YOUR FIREBASE CREDENTIALS
+  apiKey: "AIzaSyASl36A_6t0BQkhrZ22bu0Gu7v1xWj5jlM",
+  authDomain: "barup-ca0f9.firebaseapp.com",
+  databaseURL: "https://barup-ca0f9.firebaseio.com",
+  projectId: "barup-ca0f9",
+  storageBucket: "barup-ca0f9.appspot.com",
+  messagingSenderId: "1060030692240"
+};
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
 
 const data = [];
 
