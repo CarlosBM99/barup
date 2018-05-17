@@ -42,6 +42,9 @@ class listBars extends Component {
 
     this.state = {
       listViewData: data,
+      refreshing: false,
+      loaging: false,
+      firstKnownKey: null
     }
   }
   static navigationOptions = { 
@@ -150,25 +153,71 @@ class listBars extends Component {
       </TouchableHighlight>
     );
   };
+  makeRemoteRequest = () => {
+    var that = this
+    that.setState({loading: true})
+    //console.log(that.state.firstKnownKey)    
+    var newData = [...that.state.listViewData]
+    var ref = firebase.database().ref('/bars')
+    ref.orderByKey().limitToFirst(2).on('child_added', function(childSnapshot, prevChildKey) {
+      //console.log(childSnapshot.val())
+      that.state.firstKnownKey = childSnapshot.key;
+      console.log("KEY:",that.state.firstKnownKey)
+      newData.push(childSnapshot)
+      that.setState({ listViewData: newData})
+    });
+  }
+  makeRemoteRequest3 = () => {
+    var that = this
+    that.setState({loading: true})
+    //console.log(that.state.firstKnownKey) 
+    var f = that.state.firstKnownKey   
+    var newData = [...that.state.listViewData]
+    var ref = firebase.database().ref('/bars')
+    ref.orderByKey().startAt(that.state.firstKnownKey).limitToFirst(3).on('child_added', function(childSnapshot, prevChildKey) {
+      that.state.firstKnownKey = childSnapshot.key;
+      if(f !== that.state.firstKnownKey){
+        
+        console.log("CHILD: ", childSnapshot.key)
+      
+        newData.push(childSnapshot)
+        that.setState({ listViewData: newData})
+      }
+    });
+  }
   componentDidMount() {
     var that = this
-    var newData = [...that.state.listViewData]
-    var ref = firebase.database().ref('/bars') 
-    ref.on("child_added", function(snapshot) {
-      newData.push(snapshot)
-      that.setState({ listViewData: newData})
-    })
+    that.makeRemoteRequest()
+    setTimeout(function(){
+      that.makeRemoteRequest3()
+    },3000)
+    setTimeout(function(){
+      that.makeRemoteRequest3()
+    },6000)
   }
   componentWillUnmount(){
     this.setState({ listViewData: data})
   }
+
+  handleRefresh = () => {
+    var that = this
+    setTimeout(function(){that.makeRemoteRequest2()}, 1000)
+  }
+  handleLoadMore = () => {
+    var that = this  
+    setTimeout(function(){that.makeRemoteRequest2()})
+  }
   render() { 
     return (
       <FlatList
-        backgroundColor="black"
+        backgroundColor="white"
         data={this.state.listViewData}
         style={styles.container}
         renderItem={this.renderItem}
+        //refreshing={this.state.refreshing}
+        //onRefresh={this.handleRefresh}
+        //onEndReached={this.handleLoadMore}
+        //onEndReachedThreshold={0}
       />
     )
   }

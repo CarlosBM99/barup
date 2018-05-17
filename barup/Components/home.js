@@ -120,17 +120,14 @@ class Home extends React.Component {
     this.setState({
       loading: true
     });
-    console.log(params,"AAAAAAA")
     var key = firebase.database().ref('/status_search').push().key
     firebase.database().ref('/status_search').child(key).set({ id: key, it: params, state: 1 })
     var that = this
     var int = setInterval(() => {
-      //console.log("a")
       var ref = firebase.database().ref('/status_search/')
       ref.once("value")
         .then(function(snapshot) {
           var childKey = snapshot.child(key+'/state').val(); // "last"
-          console.log(childKey)
           if(childKey === 1){
             that.setState({
               st: childKey,
@@ -138,7 +135,7 @@ class Home extends React.Component {
         }
         });
         if(this.state.st === 1){
-          props.navigation.navigate('listBars',{listViewData: ["A"]})
+          props.navigation.navigate('listBars')
           that.setState({
             loading: false,
             st: 0
@@ -149,13 +146,10 @@ class Home extends React.Component {
       
     }, 500);
     
-    console.log("IN")
     //key = firebase.database().ref('/status_search').push().key
     //firebase.database().ref('/status_search').child(key).set({ name: "AAAAAA" })
   }
   b(){
-    console.log("OUT")
-    console.log(key)
     firebase.database().ref('status_search/' + key).set(null)
   }
   render() {
