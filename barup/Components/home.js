@@ -152,6 +152,23 @@ class Home extends React.Component {
   b(){
     firebase.database().ref('status_search/' + key).set(null)
   }
+  c(props,params){
+    var object = {
+      "beer" : 2,
+      "beerPrice" : "2.00",
+      "billiards" : 1,
+      "crowd" : "Medium",
+      "darts" : 0,
+      "football" : 1,
+      "id" : 4,
+      "location" : "Marina",
+      "name" : "Can sorra",
+      "rating" : 4
+    }
+  
+    key = firebase.database().ref('/bars').push().key
+    firebase.database().ref('/bars').child(key).set(object)
+  }
   render() {
 
     return (

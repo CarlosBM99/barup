@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { StyleSheet, Text, View, StatusBar, ListView, Image,TouchableOpacity, FlatList, Dimensions, TouchableHighlight } from 'react-native';
+import { StyleSheet, Text, View, StatusBar, ListView, Image,TouchableOpacity, FlatList, Dimensions, TouchableHighlight, ActivityIndicator } from 'react-native';
 import { Container, Content, Header, Form, Input, Item, Button, Label, Icon, List, ListItem, Card, CardItem, Thumbnail, Body, Left, Right} from 'native-base'
 
 import * as firebase from 'firebase';
@@ -159,65 +159,85 @@ class listBars extends Component {
     //console.log(that.state.firstKnownKey)    
     var newData = [...that.state.listViewData]
     var ref = firebase.database().ref('/bars')
-    ref.orderByKey().limitToFirst(2).on('child_added', function(childSnapshot, prevChildKey) {
+    ref.orderByKey().limitToFirst(4).on('child_added', function(childSnapshot, prevChildKey) {
       //console.log(childSnapshot.val())
       that.state.firstKnownKey = childSnapshot.key;
       console.log("KEY:",that.state.firstKnownKey)
       newData.push(childSnapshot)
-      that.setState({ listViewData: newData})
-    });
+    },
+    that.setState({ listViewData: newData, refreshing: false, loading: false}));
   }
-  makeRemoteRequest3 = () => {
+  makeRemoteRequest2 = () => {
     var that = this
     that.setState({loading: true})
     //console.log(that.state.firstKnownKey) 
     var f = that.state.firstKnownKey   
     var newData = [...that.state.listViewData]
     var ref = firebase.database().ref('/bars')
-    ref.orderByKey().startAt(that.state.firstKnownKey).limitToFirst(3).on('child_added', function(childSnapshot, prevChildKey) {
+    ref.orderByKey().startAt(that.state.firstKnownKey).limitToFirst(5).on('child_added', function(childSnapshot, prevChildKey) {
       that.state.firstKnownKey = childSnapshot.key;
       if(f !== that.state.firstKnownKey){
         
         console.log("CHILD: ", childSnapshot.key)
-      
+        
         newData.push(childSnapshot)
-        that.setState({ listViewData: newData})
       }
-    });
+    },
+    that.setState({ listViewData: newData, refreshing: false, loading: false}));
   }
   componentDidMount() {
     var that = this
-    that.makeRemoteRequest()
+    that.makeRemoteRequest()/* 
     setTimeout(function(){
       that.makeRemoteRequest3()
     },3000)
     setTimeout(function(){
       that.makeRemoteRequest3()
-    },6000)
+    },6000) */
   }
   componentWillUnmount(){
     this.setState({ listViewData: data})
   }
 
-  handleRefresh = () => {
-    var that = this
-    setTimeout(function(){that.makeRemoteRequest2()}, 1000)
+  /* handleRefresh = () => {
+    var that = this 
+    that.setState({
+      refreshing: true
+    }, () => {
+      that.makeRemoteRequest2()
+    })
+    
+  } */
+  renderFooter = () => {
+      
+      return(
+      <ActivityIndicator
+            size="large"
+                    animating={true} />
+      ) 
   }
+
   handleLoadMore = () => {
-    var that = this  
-    setTimeout(function(){that.makeRemoteRequest2()})
+    var that = this 
+    that.setState({
+      refreshing: true
+    }, () => {
+      setTimeout(function(){that.makeRemoteRequest2()},2000)
+    })
   }
   render() { 
+    var i
     return (
       <FlatList
         backgroundColor="white"
         data={this.state.listViewData}
         style={styles.container}
         renderItem={this.renderItem}
-        //refreshing={this.state.refreshing}
+        refreshing={this.state.refreshing}
         //onRefresh={this.handleRefresh}
-        //onEndReached={this.handleLoadMore}
-        //onEndReachedThreshold={0}
+        onEndReached={this.handleLoadMore}
+        onEndReachedThreshold={1}
+        ListFooterComponent={this.state.refreshing === true ? this.renderFooter: null}
       />
     )
   }
