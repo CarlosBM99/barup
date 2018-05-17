@@ -39,10 +39,6 @@ if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 }
 
-
-var key = "A"
-
-
 class Home extends React.Component {
   constructor(props) {
     super(props);
@@ -59,8 +55,24 @@ class Home extends React.Component {
         loading: false,
         st: 0
     }
+    this.params = {
+      badgets: {
+        billards: 0,
+        darts: 0,
+        table_football: 0
+      },
+      order: {
+        beer_prace: 0,
+        crowdness: 0,
+        rating: 0
+      },
+      style: {
+        familiar: 0,
+        luxurious: 0,
+        youthful: 0
+      }
+    }
   }
-
   renderDarts()  {
     var tempDarts = this.state.showDarts? dartCheck : dartUncheck;
     return (
@@ -90,7 +102,7 @@ class Home extends React.Component {
       />
     );
   }
-
+  
 /****TEMP****/
   onPressButton() {
     Alert.alert('You tapped the button!')
@@ -104,18 +116,20 @@ class Home extends React.Component {
     headerTitleStyle: { color: '#fed849' },
     headerBackTitle: null,
   }
-  a(props){
+  a(props,params){
     this.setState({
       loading: true
     });
+    console.log(params,"AAAAAAA")
+    var key = firebase.database().ref('/status_search').push().key
+    firebase.database().ref('/status_search').child(key).set({ id: key, it: params, state: 1 })
     var that = this
     var int = setInterval(() => {
       //console.log("a")
       var ref = firebase.database().ref('/status_search/')
       ref.once("value")
         .then(function(snapshot) {
-          var key = snapshot.key; // "ada"
-          var childKey = snapshot.child("/state").val(); // "last"
+          var childKey = snapshot.child(key+'/state').val(); // "last"
           console.log(childKey)
           if(childKey === 1){
             that.setState({
@@ -123,12 +137,13 @@ class Home extends React.Component {
           })
         }
         });
-        
         if(this.state.st === 1){
+          props.navigation.navigate('listBars',{listViewData: ["A"]})
           that.setState({
             loading: false,
-          })
-          props.navigation.navigate('listBars',{listViewData: ["A"]})
+            st: 0
+          }) 
+          firebase.database().ref('status_search/' + key).set(null)
           clearInterval(int);
         }
       
@@ -166,7 +181,9 @@ class Home extends React.Component {
               <Text>   Familiar</Text>
             </Body>
 
-            <CheckBox checked={this.state.youthful} color="black" onPress={ () => this.setState({ youthful: !this.state.youthful })}/>
+            <CheckBox checked={this.state.youthful} color="black" onPress={ () => {this.setState({ youthful: !this.state.youthful 
+                                                                                  })
+                                                                                  this.params.style.youthful = 1}}/>
             <Body>
               <Text>   Youthful</Text>
             </Body>
@@ -223,21 +240,22 @@ class Home extends React.Component {
             {this.renderBilliards()}
           </TouchableOpacity>
     </View>
-        
+        {
+          this.state.loading === false ? 
           <Button
             large
-            onPress={() => this.a(this.props) }            
+            onPress={() => this.a(this.props,this.params) }            
             //onPress={() => this.props.navigation.navigate('listBars',{listViewData: ["A"], st:true})  }
             title="Search Bars"
             buttonStyle={styles.button}
             
-          />
-          <View style={styles.modalBackground}>
-            <View style={styles.activityIndicatorWrapper}>
-              <ActivityIndicator
-                animating={this.state.loading} />
-            </View>
-          </View>
+          /> :
+              <View style={styles.loader}>
+                <Text>Loading</Text>
+                <ActivityIndicator
+                  animating={this.state.loading} />
+              </View>
+        }
         </View>
         </View>
     );
@@ -273,7 +291,7 @@ const styles = StyleSheet.create({
     alignSelf:'center',
   },
   activityIndicatorWrapper: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#000',
     height: 100,
     width: 100,
     borderRadius: 10,
@@ -288,4 +306,15 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     backgroundColor: '#00000040'
   },
+  loader:{
+    flex:1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf:'center',
+    height:100,
+    width:100,
+    borderRadius: 10,
+    backgroundColor: '#5555'
+
+  }
 });
