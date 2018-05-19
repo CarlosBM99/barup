@@ -26,7 +26,7 @@ const AppStackNavigator = StackNavigator({
 },
   {
     navigationOptions: {
-      gesturesEnabled: false
+      gesturesEnabled: true
     }
 })
 

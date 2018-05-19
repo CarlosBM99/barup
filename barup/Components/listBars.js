@@ -109,47 +109,47 @@ class listBars extends Component {
     return (
       //<View style={styles.item}>
       <TouchableHighlight onPress={() => this.goToNextScreen()}>
-      <Card style={{flex:1}}>
-        <CardItem style={{marginBottom:-20}}>
-          {this.renderBarImage(item)}
-          <Body style={{paddingLeft: 10}}>
-            <Text style={{fontWeight:'bold', fontSize:17}}>{item.val().name}</Text>
-            <Text style={{marginTop: 10}}>{item.val().location}</Text>
-            <Item style={{marginTop: 10}}>
-              <Icon name="beer"/>
-              <Icon name="beer"/>
-              <Icon name="beer"/>
-              <Icon name="beer"/>
-            </Item>
-          </Body>
-          <Right style={{marginTop:-50}}>
-            <Icon style={{fontSize: 40, color: 'black'}} name="star"/>
-          </Right>
-        </CardItem>
-        <CardItem style={{flex:1,marginTop:0, height:45}}>
-          <View style={{flex:1,flexDirection:'row', justifyContent: 'center',
-      alignItems: 'center'}}>
-              <View style={{flexDirection:'row', marginHorizontal:"2%"}}>
-                {this.renderDartsBadge(item)}
-                {this.renderFootballBadge(item)}
-                {this.renderBilliardsBadge(item)}
-                </View>
-
+        <Card style={{flex:1}}>
+          <CardItem style={{marginBottom:-20}}>
+            {this.renderBarImage(item)}
+            <Body style={{paddingLeft: 10}}>
+              <Text style={{fontWeight:'bold', fontSize:17}}>{item.val().name}</Text>
+              <Text style={{marginTop: 10}}>{item.val().location}</Text>
+              <Item style={{marginTop: 10}}>
+                <Icon name="beer"/>
+                <Icon name="beer"/>
+                <Icon name="beer"/>
+                <Icon name="beer"/>
+              </Item>
+            </Body>
+            <Right style={{marginTop:-50}}>
+              <Icon style={{fontSize: 40, color: 'black'}} name="star"/>
+            </Right>
+          </CardItem>
+          <CardItem style={{flex:1,marginTop:0, height:45}}>
             <View style={{flex:1,flexDirection:'row', justifyContent: 'center',
-        alignItems: 'center', marginLeft:10}}>
-              <Text style={{marginLeft:10,fontSize:20}}> {item.val().beerPrice}€
-              </Text><Text style={{fontSize:13,marginRight:25,marginTop:10}}> /Beer</Text>
+        alignItems: 'center'}}>
+                <View style={{flexDirection:'row', marginHorizontal:"2%"}}>
+                  {this.renderDartsBadge(item)}
+                  {this.renderFootballBadge(item)}
+                  {this.renderBilliardsBadge(item)}
+                  </View>
+
+              <View style={{flex:1,flexDirection:'row', justifyContent: 'center',
+          alignItems: 'center', marginLeft:10}}>
+                <Text style={{marginLeft:10,fontSize:20}}> {item.val().beerPrice}€
+                </Text><Text style={{fontSize:13,marginRight:25,marginTop:10}}> /Beer</Text>
+              </View>
+              <View style={{flexDirection:'row', justifyContent: 'center',
+        alignItems: 'center'}}>
+                <Text style={{fontSize:20}}>
+                  {item.val().crowd}
+                </Text>
+                <Icon style={{marginLeft:5}} name="information-circle"/>
+              </View>
             </View>
-            <View style={{flexDirection:'row', justifyContent: 'center',
-      alignItems: 'center'}}>
-              <Text style={{fontSize:20}}>
-                {item.val().crowd}
-              </Text>
-              <Icon style={{marginLeft:5}} name="information-circle"/>
-            </View>
-          </View>
-        </CardItem>
-      </Card>
+          </CardItem>
+        </Card>
       </TouchableHighlight>
     );
   };
@@ -177,13 +177,14 @@ class listBars extends Component {
     ref.orderByKey().startAt(that.state.firstKnownKey).limitToFirst(5).on('child_added', function(childSnapshot, prevChildKey) {
       that.state.firstKnownKey = childSnapshot.key;
       if(f !== that.state.firstKnownKey){
-        
         console.log("CHILD: ", childSnapshot.key)
-        
         newData.push(childSnapshot)
+      } else {
+        that.setState({ listViewData: newData, refreshing: false, loading: false})
       }
     },
     that.setState({ listViewData: newData, refreshing: false, loading: false}));
+    console.log(this.state.refreshing)
   }
   componentDidMount() {
     var that = this
@@ -208,14 +209,6 @@ class listBars extends Component {
     })
     
   } */
-  renderFooter = () => {
-      
-      return(
-      <ActivityIndicator
-            size="large"
-                    animating={true} />
-      ) 
-  }
 
   handleLoadMore = () => {
     var that = this 
@@ -226,7 +219,6 @@ class listBars extends Component {
     })
   }
   render() { 
-    var i
     return (
       <FlatList
         backgroundColor="white"
@@ -237,7 +229,18 @@ class listBars extends Component {
         //onRefresh={this.handleRefresh}
         onEndReached={this.handleLoadMore}
         onEndReachedThreshold={1}
-        ListFooterComponent={this.state.refreshing === true ? this.renderFooter: null}
+        ListFooterComponent={() => { // replaces renderFooter={() => {
+          if(this.state.refreshing){
+            return (
+            <View style={{ flex: 1, padding: 10 }}>
+              <ActivityIndicator size="large" />
+            </View> 
+            );
+          }
+          else {
+            return null
+          }
+        }}
       />
     )
   }
