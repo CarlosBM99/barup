@@ -116,12 +116,13 @@ class Home extends React.Component {
     headerTitleStyle: { color: '#fed849' },
     headerBackTitle: null,
   }
-  a(props,params){
+  async a(props,params){
     this.setState({
       loading: true
     });
     var key = firebase.database().ref('/status_search').push().key
     firebase.database().ref('/status_search').child(key).set({ id: key, it: params, state: 1 })
+    fetch('https://b401e2ee.ngrok.io/test/results.php?name='+key+'&run=true');
     var that = this
     var int = setInterval(() => {
       var ref = firebase.database().ref('/status_search/')
