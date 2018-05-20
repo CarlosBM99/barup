@@ -45,11 +45,11 @@ db = firebase.database()
 #print(test.val())
 
 #data = {"name": "The bar with no name","class": "test"}
-#db.child("bars").child("TestBar").set(data)
+#db.child("results").child("TestBar").set(data)
 
 #time.sleep(10)
 
-#db.child("bars").child("TestBar").remove()
+#db.child("results").child("TestBar").remove()
 
 #print(db.child("bars").get().val())
 
@@ -74,4 +74,6 @@ for test in bList:
 
 ###SECTION 2:sort with binary criteria ###
 
+
 #sortInfo = db.child("status_search").get().val#child(id gotten from app)
+
