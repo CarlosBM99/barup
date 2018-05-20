@@ -187,6 +187,7 @@ class listBars extends Component {
     that.setState({ listViewData: newData, refreshing: false, loading: false}));
     console.log(this.state.refreshing)
   }
+  
   componentDidMount() {
     var that = this
     that.makeRemoteRequest()
