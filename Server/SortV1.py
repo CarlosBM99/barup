@@ -48,8 +48,8 @@ test = db.child("status_search").child("-LCiGxdHnFR4pMroxKwi").get()
 print(test.val())
 
 data = {"name": "The bar with no name","class": "test"}
-db.child("bars").child("TestBar").set(data)
+db.child("results").child("TestBar").set(data)
 
 time.sleep(10)
 
-db.child("bars").child("TestBar").remove()
+db.child("results").child("TestBar").remove()
