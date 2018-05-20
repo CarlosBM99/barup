@@ -15,9 +15,19 @@ class Detail extends Component {
       backgroundColor: 'black'
     }
   }
+  
 	render(){
+
+    const { navigation } = this.props;
+    const info = navigation.getParam('info', 'NO-ID');
+
 		return(
-		  <View><Text>Detail Screen</Text></View>
+		  <View style={styles.container}>
+        <Text>{info.val().name}</Text>
+        <Text>{info.val().beerPrice}</Text>
+        <Text>{info.val().location}</Text>
+        <Text>{info.val().rating}</Text>
+      </View>
 		)
 	}
 }
@@ -27,7 +37,7 @@ export default Detail;
 const styles = StyleSheet.create({
   container : {
     flexGrow: 1,
-    justifyContent:'flex-end',
+    justifyContent:'center',
     alignItems: 'center'
   },
   logoText : {

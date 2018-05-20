@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   StatusBar,
   TouchableHighlight,
+  ActivityIndicator,
 } from 'react-native';
 import {Button} from 'react-native-elements'
 import {Dropdown} from 'react-native-material-dropdown'
@@ -23,6 +24,21 @@ const footballUncheck = require('../assets/football.png');
 const billiardsCheck = require('../assets/billiards_check.png');
 const billiardsUncheck = require('../assets/billiards.png');
 
+import * as firebase from 'firebase';
+// Initialize Firebase
+const firebaseConfig = {
+  // ADD YOUR FIREBASE CREDENTIALS
+  apiKey: "AIzaSyASl36A_6t0BQkhrZ22bu0Gu7v1xWj5jlM",
+  authDomain: "barup-ca0f9.firebaseapp.com",
+  databaseURL: "https://barup-ca0f9.firebaseio.com",
+  projectId: "barup-ca0f9",
+  storageBucket: "barup-ca0f9.appspot.com",
+  messagingSenderId: "1060030692240"
+};
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
+
 class Home extends React.Component {
   constructor(props) {
     super(props);
@@ -36,9 +52,27 @@ class Home extends React.Component {
         beerPrice: false,
         rating: false,
         crowdness: false,
+        loading: false,
+        st: 0
+    }
+    this.params = {
+      badgets: {
+        billards: 0,
+        darts: 0,
+        table_football: 0
+      },
+      order: {
+        beer_prace: 0,
+        crowdness: 0,
+        rating: 0
+      },
+      style: {
+        familiar: 0,
+        luxurious: 0,
+        youthful: 0
+      }
     }
   }
-
   renderDarts()  {
     var tempDarts = this.state.showDarts? dartCheck : dartUncheck;
     return (
@@ -68,7 +102,7 @@ class Home extends React.Component {
       />
     );
   }
-
+  
 /****TEMP****/
   onPressButton() {
     Alert.alert('You tapped the button!')
@@ -82,11 +116,63 @@ class Home extends React.Component {
     headerTitleStyle: { color: '#fed849' },
     headerBackTitle: null,
   }
-
+  async a(props,params){
+    this.setState({
+      loading: true
+    });
+    var key = firebase.database().ref('/status_search').push().key
+    firebase.database().ref('/status_search').child(key).set({ id: key, it: params, state: 1 })
+    fetch('https://a91529ee.ngrok.io/test/results.php?name='+key+'&run=true');
+    var that = this
+    var int = setInterval(() => {
+      var ref = firebase.database().ref('/status_search/')
+      ref.once("value")
+        .then(function(snapshot) {
+          var childKey = snapshot.child(key+'/state').val(); // "last"
+          if(childKey === 1){
+            that.setState({
+              st: childKey,
+          })
+        }
+        });
+        if(this.state.st === 1){
+          props.navigation.navigate('listBars')
+          that.setState({
+            loading: false,
+            st: 0
+          }) 
+          firebase.database().ref('status_search/' + key).set(null)
+          clearInterval(int);
+        }
+      
+    }, 500);
+    
+    //key = firebase.database().ref('/status_search').push().key
+    //firebase.database().ref('/status_search').child(key).set({ name: "AAAAAA" })
+  }
+  b(){
+    firebase.database().ref('status_search/' + key).set(null)
+  }
+  c(props,params){
+    var object = {
+      "beer" : 2,
+      "beerPrice" : "2.00",
+      "billiards" : 1,
+      "crowd" : "Medium",
+      "darts" : 0,
+      "football" : 1,
+      "id" : 4,
+      "location" : "Marina",
+      "name" : "Can sorra",
+      "rating" : 4
+    }
+  
+    key = firebase.database().ref('/bars').push().key
+    firebase.database().ref('/bars').child(key).set(object)
+  }
   render() {
 
     return (
-      
       <View style={{flex:1, padding:50}}>
       <StatusBar barStyle="light-content"/>
           <View style={{flex:1, marginLeft:5}}>
@@ -107,7 +193,9 @@ class Home extends React.Component {
               <Text>   Familiar</Text>
             </Body>
 
-            <CheckBox checked={this.state.youthful} color="black" onPress={ () => this.setState({ youthful: !this.state.youthful })}/>
+            <CheckBox checked={this.state.youthful} color="black" onPress={ () => {this.setState({ youthful: !this.state.youthful 
+                                                                                  })
+                                                                                  this.params.style.youthful = 1}}/>
             <Body>
               <Text>   Youthful</Text>
             </Body>
@@ -164,13 +252,22 @@ class Home extends React.Component {
             {this.renderBilliards()}
           </TouchableOpacity>
     </View>
-        
+        {
+          this.state.loading === false ? 
           <Button
             large
-            onPress={() => this.props.navigation.navigate('listBars',{listViewData: ["A"], st:true})  }
+            onPress={() => this.a(this.props,this.params) }            
+            //onPress={() => this.props.navigation.navigate('listBars',{listViewData: ["A"], st:true})  }
             title="Search Bars"
             buttonStyle={styles.button}
-          />
+            
+          /> :
+              <View style={styles.loader}>
+                <Text>Loading</Text>
+                <ActivityIndicator
+                  animating={this.state.loading} />
+              </View>
+        }
         </View>
         </View>
     );
@@ -204,5 +301,32 @@ const styles = StyleSheet.create({
     height:100,
     width:100,
     alignSelf:'center',
+  },
+  activityIndicatorWrapper: {
+    backgroundColor: '#000',
+    height: 100,
+    width: 100,
+    borderRadius: 10,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-around'
+  },
+  modalBackground: {
+    flex: 1,
+    alignItems: 'center',
+    flexDirection: 'column',
+    justifyContent: 'space-around',
+    backgroundColor: '#00000040'
+  },
+  loader:{
+    flex:1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf:'center',
+    height:100,
+    width:100,
+    borderRadius: 10,
+    backgroundColor: '#5555'
+
   }
 });
