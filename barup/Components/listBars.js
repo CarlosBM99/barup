@@ -189,24 +189,8 @@ class listBars extends Component {
   }
   componentDidMount() {
     var that = this
-    that.makeRemoteRequest()/* 
-    setTimeout(function(){
-      that.makeRemoteRequest3()
-    },3000)
-    setTimeout(function(){
-      that.makeRemoteRequest3()
-    },6000) */
+    that.makeRemoteRequest()
   }
-
-  /* handleRefresh = () => {
-    var that = this 
-    that.setState({
-      refreshing: true
-    }, () => {
-      that.makeRemoteRequest2()
-    })
-    
-  } */
 
   handleLoadMore = () => {
     var that = this 
