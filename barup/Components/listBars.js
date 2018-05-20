@@ -59,9 +59,10 @@ class listBars extends Component {
     },
     headerBackTitle: null,
   }
-  goToNextScreen = () => {
+
+  goToNextScreen(item){
     const { navigate } = this.props.navigation;
-    return navigate('Detail');
+    return navigate('Detail',{ info: item});
   }
 
   renderDartsBadge(item)  {
@@ -108,7 +109,7 @@ class listBars extends Component {
     //function to go to next screen
     return (
       //<View style={styles.item}>
-      <TouchableHighlight onPress={() => this.goToNextScreen()}>
+      <TouchableHighlight onPress={() => this.goToNextScreen(item)}>
         <Card style={{flex:1}}>
           <CardItem style={{marginBottom:-20}}>
             {this.renderBarImage(item)}
@@ -195,9 +196,6 @@ class listBars extends Component {
     setTimeout(function(){
       that.makeRemoteRequest3()
     },6000) */
-  }
-  componentWillUnmount(){
-    this.setState({ listViewData: data})
   }
 
   /* handleRefresh = () => {
