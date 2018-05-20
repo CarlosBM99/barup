@@ -1,1 +1,0 @@
-- changes made to a lot of paths in the firebse sdk since by default it gave erros due to wrong file locations
