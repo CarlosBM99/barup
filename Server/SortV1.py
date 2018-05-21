@@ -36,7 +36,22 @@ class Bar:
 		self.rating = rating
       
    
-	  
+def binSort(str, dict, keys):
+	delList = []
+	for index in range(0,len(keys)-1):
+		if dict[keys[index]][str] == 0:
+			delList.append(index)
+		
+	keys2 = keys
+	print(len(delList))
+		
+
+	for dIndex in sorted(delList, reverse=True):		
+		del dict[keys2[dIndex]]
+		keys.remove(keys2[dIndex])
+	
+
+   
 firebase = pyrebase.initialize_app(config)
 
 db = firebase.database()
@@ -53,10 +68,29 @@ db = firebase.database()
 
 #print(db.child("bars").get().val())
 
-###SECTION 1:get the databae in a list of objects for sorting###
+###SECTION 1:sort with binary criteria badges and style ###
 
 all_bar = db.child("bars").get().val()
 keys = list(all_bar)
+
+sortInfo = db.child("status_search").child("-LCiGxdHnFR4pMroxKwi").get().val()#child(id gotten from app)
+#print(all_bar)
+
+print(sortInfo)
+
+if sortInfo["it"]["badgets"]["billiards"] == 1:
+	binSort("billiards",all_bar,keys)
+if sortInfo["it"]["badgets"]["darts"] == 1:
+	binSort("darts",all_bar,keys)
+if sortInfo["it"]["badgets"]["table_football"] == 1:
+	binSort("football",all_bar,keys)
+
+#check sorting conditions with if statement -> iterate and del, if end is reached break, a function would be nice, need to get key from input
+
+
+###SECTION 2:get the databae in a list of objects for sorting###
+
+
 #print(all_bar[keys[0]]["beer"])
 
 bList = []
@@ -72,8 +106,7 @@ for id in range(0, len(keys)-1):
 for test in bList:
 	print(test.name)
 
-###SECTION 2:sort with binary criteria ###
 
+###SECTION 3:sort with gradient criteria, mergesort in parallel ###	
 
-#sortInfo = db.child("status_search").get().val#child(id gotten from app)
-
+###SECTION 4:upload to result and tick off the confirmation flag ###
