@@ -38,12 +38,12 @@ class Bar:
    
 def binSort(str, dict, keys):
 	delList = []
-	for index in range(0,len(keys)-1):
+	for index in range(0,len(keys)):
 		if dict[keys[index]][str] == 0:
 			delList.append(index)
 		
 	keys2 = keys
-	print(len(delList))
+	#print(len(delList))
 		
 
 	for dIndex in sorted(delList, reverse=True):		
@@ -76,26 +76,24 @@ keys = list(all_bar)
 sortInfo = db.child("status_search").child("-LCiGxdHnFR4pMroxKwi").get().val()#child(id gotten from app)
 #print(all_bar)
 
-print(sortInfo)
 
 if sortInfo["it"]["badgets"]["billiards"] == 1:
-	binSort("billiards",all_bar,keys)
+	binSort("darts",all_bar,keys)
 if sortInfo["it"]["badgets"]["darts"] == 1:
 	binSort("darts",all_bar,keys)
 if sortInfo["it"]["badgets"]["table_football"] == 1:
 	binSort("football",all_bar,keys)
 
-#check sorting conditions with if statement -> iterate and del, if end is reached break, a function would be nice, need to get key from input
+#need to get key from input
 
-
-###SECTION 2:get the databae in a list of objects for sorting###
+###SECTION 2:get the database in a list of objects for sorting###
 
 
 #print(all_bar[keys[0]]["beer"])
 
 bList = []
 
-for id in range(0, len(keys)-1):
+for id in range(0, len(keys)):
     
 	bList.append(Bar(all_bar[keys[id]]["beer"],all_bar[keys[id]]["beerPrice"],
 					all_bar[keys[id]]["billiards"],all_bar[keys[id]]["crowd"],
@@ -104,9 +102,23 @@ for id in range(0, len(keys)-1):
 					all_bar[keys[id]]["name"],all_bar[keys[id]]["rating"],))
 	
 for test in bList:
-	print(test.name)
-
+	print(test.beer)
+	
 
 ###SECTION 3:sort with gradient criteria, mergesort in parallel ###	
 
 ###SECTION 4:upload to result and tick off the confirmation flag ###
+resDict = dict()
+
+for index in range(0, len(keys)):
+	resDict[keys[index]] = {"beer": bList[index].beer,"beerPrice": bList[index].beerPrice,
+							"billiards": bList[index].billiards,"crowd": bList[index].crowd,
+							"darts": bList[index].darts,"football": bList[index].football,
+							"id": bList[index].id,"location": bList[index].location,
+							"name": bList[index].name,"rating": bList[index].rating}
+							
+db.child("results").child("-LCiGxdHnFR4pMroxKwi").set(resDict)#change later o key
+
+time.sleep(10)
+
+db.child("results").child("-LCiGxdHnFR4pMroxKwi").remove()#change later to key
