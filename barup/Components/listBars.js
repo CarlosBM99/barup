@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import { StyleSheet, Text, View, StatusBar, ListView, Image,TouchableOpacity, FlatList, Dimensions, TouchableHighlight, ActivityIndicator } from 'react-native';
 import { Container, Content, Header, Form, Input, Item, Button, Label, Icon, List, ListItem, Card, CardItem, Thumbnail, Body, Left, Right} from 'native-base'
 
+var {height, width} = Dimensions.get('window');
+
 import * as firebase from 'firebase';
 // Initialize Firebase
 const firebaseConfig = {
@@ -104,56 +106,6 @@ class listBars extends Component {
       <Image source={barImages[barID]} style={styles.imag}/>
     );
   }
-
-  renderItem = ({ item }) => {
-    //function to go to next screen
-    return (
-      //<View style={styles.item}>
-      <TouchableHighlight onPress={() => this.goToNextScreen(item)}>
-        <Card style={{flex:1}}>
-          <CardItem style={{marginBottom:-20}}>
-            {this.renderBarImage(item)}
-            <Body style={{paddingLeft: 10}}>
-              <Text style={{fontWeight:'bold', fontSize:17}}>{item.val().name}</Text>
-              <Text style={{marginTop: 10}}>{item.val().location}</Text>
-              <Item style={{marginTop: 10}}>
-                <Icon name="beer"/>
-                <Icon name="beer"/>
-                <Icon name="beer"/>
-                <Icon name="beer"/>
-              </Item>
-            </Body>
-            <Right style={{marginTop:-50}}>
-              <Icon style={{fontSize: 40, color: 'black'}} name="star"/>
-            </Right>
-          </CardItem>
-          <CardItem style={{flex:1,marginTop:0, height:45}}>
-            <View style={{flex:1,flexDirection:'row', justifyContent: 'center',
-        alignItems: 'center'}}>
-                <View style={{flexDirection:'row', marginHorizontal:"2%"}}>
-                  {this.renderDartsBadge(item)}
-                  {this.renderFootballBadge(item)}
-                  {this.renderBilliardsBadge(item)}
-                  </View>
-
-              <View style={{flex:1,flexDirection:'row', justifyContent: 'center',
-          alignItems: 'center', marginLeft:10}}>
-                <Text style={{marginLeft:10,fontSize:20}}> {item.val().beerPrice}€
-                </Text><Text style={{fontSize:13,marginRight:25,marginTop:10}}> /Beer</Text>
-              </View>
-              <View style={{flexDirection:'row', justifyContent: 'center',
-        alignItems: 'center'}}>
-                <Text style={{fontSize:20}}>
-                  {item.val().crowd}
-                </Text>
-                <Icon style={{marginLeft:5}} name="information-circle"/>
-              </View>
-            </View>
-          </CardItem>
-        </Card>
-      </TouchableHighlight>
-    );
-  };
   makeRemoteRequest = () => {
     var that = this
     that.setState({loading: true})
@@ -201,12 +153,48 @@ class listBars extends Component {
       setTimeout(function(){that.makeRemoteRequest2()},2000)
     })
   }
+  renderItem = ({ item }) => {
+    return (
+      <TouchableHighlight onPress={() => this.goToNextScreen(item)}>
+        <View style={[{ width: (width) }, { height: (height) / 5 }, { marginBottom: 0 }, { paddingVertical: 0 }]}>
+          <Card style={styles.card}>
+            <View style={styles.ib}>
+              <Image style={styles.listImg} source={ barImages[2] } />
+              <View style={styles.badges}>
+                {this.renderDartsBadge(item)}
+                {this.renderFootballBadge(item)}
+                {this.renderBilliardsBadge(item)}
+              </View>
+            </View>
+            <View style={styles.info}>
+              <Text style={{flex:1,fontSize:20}}>{item.val().name}</Text>
+              <Text style={{flex:1,fontSize:20}}>{item.val().location}</Text>
+              <Item style={{flex:1}}>
+                <Icon style={{fontSize:(((width)/100)+10)}} name="beer"/>
+                <Icon style={{fontSize:(((width)/100)+10)}} name="beer"/>
+                <Icon style={{fontSize:(((width)/100)+10)}} name="beer"/>
+                <Icon style={{fontSize:(((width)/100)+10)}} name="beer"/>
+              </Item>
+              <Text style={{flex:1,fontSize:(((width)/100)+10)}}>{item.val().beerPrice}€</Text>
+
+            </View>
+            <View styles={styles.more}>
+              <Icon style={{flex:1,fontSize: 40, color: 'black'}} name="star"/>
+              <Text style={{flex:1}}>{item.val().crowd}</Text> 
+            </View>
+          </Card>
+        </View> 
+      </TouchableHighlight>
+      
+    );
+  };
   render() { 
     return (
+      <View style={styles.container}>
       <FlatList
         backgroundColor="white"
         data={this.state.listViewData}
-        style={styles.container}
+        
         renderItem={this.renderItem}
         refreshing={this.state.refreshing}
         //onRefresh={this.handleRefresh}
@@ -225,6 +213,7 @@ class listBars extends Component {
           }
         }}
       />
+      </View>
     )
   }
 }
@@ -232,8 +221,7 @@ export default listBars;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    //marginVertical: 20,
+    flex: 1
   },
   item: {
     backgroundColor: '#dce3ef',
@@ -245,8 +233,12 @@ const styles = StyleSheet.create({
   },
   imag:{
     flex: 1,
-    height: 100, 
-    width: 100
+    height:100,
+    width:100,
+  },
+  listImg: {
+    width: '100%',
+    height: '70%',
   },
   itemInvisible: {
     backgroundColor: 'transparent',
@@ -254,4 +246,36 @@ const styles = StyleSheet.create({
   itemText: {
     color: 'black',
   },
+  ib: {
+    flex: 2,
+    flexDirection: 'column',
+    justifyContent: 'center',    
+    alignItems: 'center',
+    padding: 2,
+    margin: 2
+  },
+  card: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+  },
+  badges: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+  },
+  info:{
+    flex: 2,
+    flexDirection: 'column',
+    justifyContent: 'space-between',    
+    alignItems: 'flex-start',
+  },
+  more: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'space-between',    
+    alignItems: 'flex-end',
+  }
 });
