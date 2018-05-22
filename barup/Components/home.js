@@ -129,7 +129,7 @@ class Home extends React.Component {
     });
     var key = firebase.database().ref('/status_search').push().key
     firebase.database().ref('/status_search').child(key).set({ id: key, it: params, state: 1 })
-    fetch('https://f4b661db.ngrok.io/test/results.php?name='+key+'&run=true');
+    fetch('https://25d10bcb.ngrok.io/test/results.php?name='+key+'&run=true');
     var that = this
     var int = setInterval(() => {
       var ref = firebase.database().ref('/status_search/')
@@ -240,10 +240,12 @@ class Home extends React.Component {
   }
   rest(){
     return (
-      <View style = {{flex:1}}>
-      <StatusBar barStyle="light-content"/>
-          <View style={{flex:1, marginLeft:5}}>
-            <Item style={{backgroundColor:'white', paddingHorizontal: 10, borderRadius:10}}
+      <View style={styles.container}>
+
+        <StatusBar barStyle="light-content"/>
+
+        <View style={styles.searchCity}>
+        <Item style={{backgroundColor:'white', paddingHorizontal: 10, borderRadius:10}}
                   onPress = { () => {this.setState({places: true})}}
                   >
               <Icon name="search" style={{fontSize: 30, paddingTop: 5}}/>
@@ -251,58 +253,67 @@ class Home extends React.Component {
               {/* <Icon name="locate" style={{fontSize: 30, paddingTop: 5}}/> */}
               
             </Item>  
-            
+        </View>
 
-        <ListItem style={{marginLeft:"-5%", marginTop:"10%"}}>
-          <Text style={{fontWeight:"bold",fontSize:15}}>Bar Style</Text>
-        </ListItem>
-        <Content style={{width:"130%", marginLeft:"-15%"}}>
+        <View style={{height:'25%'}}>
           <ListItem>
-            <CheckBox checked={this.state.familiar} color="black" onPress={ () => this.setState({ familiar: !this.state.familiar })}/>
-            <Body>
-              <Text>   Familiar</Text>
-            </Body>
-
-            <CheckBox checked={this.state.youthful} color="black" onPress={ () => {this.setState({ youthful: !this.state.youthful 
-                                                                                  })
-                                                                                  this.params.style.youthful = 1}}/>
-            <Body>
-              <Text>   Youthful</Text>
-            </Body>
-
-            <CheckBox checked={this.state.luxurious} color="black" onPress={ () => this.setState({ luxurious: !this.state.luxurious })}/>
-            <Body>
-              <Text>   Luxurious</Text>
-            </Body>
+            <Text style={{fontWeight:"bold",fontSize:15}}>Bar Style</Text>
           </ListItem>
-        </Content>
+          
+          <Content style={{width:"90%",alignSelf:'center'}}>
+            <ListItem>
+              <CheckBox checked={this.state.familiar} color="black" onPress={ () => this.setState({ familiar: !this.state.familiar })}/>
+              <Body>
+                <Text>   Familiar</Text>
+              </Body>
 
-      <Container style={{marginTop:"-30%"}}>
-        <ListItem style={{marginLeft:"-5%"}}>
-          <Text style={{fontWeight:"bold",fontSize:15}}>Order by</Text>
-        </ListItem>
-        <Content style={{width:"130%", marginLeft:"-15%"}}>
+              <CheckBox checked={this.state.youthful} color="black" onPress={ () => this.setState({ youthful: !this.state.youthful })}/>
+              <Body>
+                <Text>   Youthful</Text>
+              </Body>
+            </ListItem>
+      
+            <ListItem>
+              <CheckBox checked={this.state.luxurious} color="black" onPress={ () => this.setState({ luxurious: !this.state.luxurious })}/>
+              <Body>
+                <Text>   Luxurious</Text>
+              </Body>
+
+              <CheckBox checked={this.state.sport} color="black" onPress={ () => this.setState({ sport: !this.state.sport })}/>
+              <Body>
+                <Text>   Sport</Text>
+              </Body>
+            </ListItem>
+          </Content>
+        </View>
+
+        <View style={{flex:1}}>
           <ListItem>
-            <CheckBox checked={this.state.beerPrice} color="black" onPress={ () => this.setState({ beerPrice: !this.state.beerPrice })}/>
-            <Body>
-              <Text>   Beer Price</Text>
-            </Body>
-
-            <CheckBox checked={this.state.rating} color="black" onPress={ () => this.setState({ rating: !this.state.rating })}/>
-            <Body>
-              <Text>   Rating</Text>
-            </Body>
-
-            <CheckBox checked={this.state.crowdness} color="black" onPress={ () => this.setState({ crowdness: !this.state.crowdness })}/>
-            <Body>
-              <Text>   Crowdness</Text>
-            </Body>
+            <Text style={{fontWeight:"bold",fontSize:15}}>Order by</Text>
           </ListItem>
-        </Content>
-      </Container>
 
-    <View style={{flexDirection:'row', justifyContent: 'center',
-    alignItems: 'center', paddingVertical:"10%"}}>
+          <Content style={{height:'10%',width:"100%", alignSelf:"center"}}>
+            <ListItem>
+              <CheckBox checked={this.state.beerPrice} color="black" onPress={ () => this.setState({ beerPrice: !this.state.beerPrice })}/>
+              <Body>
+                <Text> Beer Price</Text>
+              </Body>
+
+              <CheckBox checked={this.state.rating} color="black" onPress={ () => this.setState({ rating: !this.state.rating })}/>
+              <Body>
+                <Text> Rating</Text>
+              </Body>
+
+              <CheckBox checked={this.state.crowdness} color="black" onPress={ () => this.setState({ crowdness: !this.state.crowdness })}/>
+              <Body>
+                <Text> Crowdness</Text>
+              </Body>
+            </ListItem>
+          </Content>
+        </View>
+
+        <View style={{flexDirection:'row', justifyContent: 'center',
+        alignItems: 'center',paddingVertical:"10%"}}>
           <TouchableOpacity
             onPress={ () => this.setState({ showDarts: !this.state.showDarts }) } 
           >
@@ -321,7 +332,9 @@ class Home extends React.Component {
           >
             {this.renderBilliards()}
           </TouchableOpacity>
-    </View>
+        </View>
+        
+        <View style={{height:"12%", marginTop:-10}}>
         {
           this.state.loading === false ? 
           <Button
@@ -339,13 +352,14 @@ class Home extends React.Component {
               </View>
         }
         </View>
-        </View>
+
+      </View>
     )
   }
   render() {
 
     return (
-      <View style={{flex:1, padding:50}}>
+      <View style={{flex:1}}>
       { this.state.places ? this.Places() :  this.rest()
           
       }
@@ -363,14 +377,15 @@ export default Home;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   button: {
     backgroundColor: "black",
     borderColor: "#f49f44",
     borderWidth: 1,
     borderRadius: 10,
+    width:"60%",
+    justifyContent: 'center',
+    alignSelf: 'center',
   },
   headerText: {
     padding: 8,
@@ -379,8 +394,7 @@ const styles = StyleSheet.create({
     color: 'white'
   },
   badge: {
-    padding: 50,
-    marginBottom: "10%",
+    padding: "5%",
     height:100,
     width:100,
     alignSelf:'center',
@@ -417,5 +431,11 @@ const styles = StyleSheet.create({
     width: width,
     height: height,
     backgroundColor: 'white'
+  },
+  searchCity: {
+    height: '15%',
+    width:'70%',
+    justifyContent: 'center',
+    alignSelf: 'center',
   }
 });
