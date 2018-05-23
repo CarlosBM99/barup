@@ -173,26 +173,30 @@ class listBars extends Component {
       <TouchableHighlight onPress={() => this.goToNextScreen(item)}>
         <View style={[{ width: (width) }, { height: (height) / 4 }, { marginBottom: 0 }, { paddingVertical: 0 }]}>
           <Card style={styles.card}>
-            <View style={styles.first}>
-              <View style={styles.barFoto}>
-              </View>
-              <View style={styles.barStyle}>
-              </View>
-              <View style={styles.barBadge}>
+            <View style={styles.ib}>
+              <Image style={styles.listImg} source={ barImages[2] } />
+              <View style={styles.badges}>
+                {this.renderDartsBadge(item)}
+                {this.renderFootballBadge(item)}
+                {this.renderBilliardsBadge(item)}
               </View>
             </View>
-            <View style={styles.second}>
-              
+            <View style={styles.info}>
+              <Text style={{flex:1,fontSize:normalize(24)}}>{item.val().name}</Text>
+              <Text style={{flex:1,fontSize:normalize(20)}}>{item.val().location}</Text>
+              <Item style={{flex:1}}>
+                <Icon style={{fontSize:normalize(24)}} name="beer"/>
+                <Icon style={{fontSize:normalize(24)}} name="beer"/>
+                <Icon style={{fontSize:normalize(24)}} name="beer"/>
+                <Icon style={{fontSize:normalize(24)}} name="beer"/>
+              </Item>
+              <Text style={{flex:1,fontSize:normalize(24)}}>{item.val().beerPrice}€</Text>
+
             </View>
-            <View style={styles.third}>
-              <View style={styles.fav}>
-              
-              </View >
-              <View style={styles.crowd}>
-                <Image style={styles.img} source={require('../assets/beer/beer1.png')}/>
-              </View >
-              
-            </View >
+            <View style={styles.more}>
+              <Icon style={{flex:1,fontSize:normalize(50), color: 'black'}} name="star"/>
+              <Text style={{flex:1,fontSize:normalize(24)}}>{item.val().crowd}</Text> 
+            </View>
           </Card>
         </View> 
       </TouchableHighlight>
@@ -257,53 +261,37 @@ const styles = StyleSheet.create({
   itemText: {
     color: 'black',
   },
+  ib: {
+    flex: 2,
+    flexDirection: 'column',
+    justifyContent: 'center',    
+    alignItems: 'center',
+    padding: 2,
+    margin: 2
+  },
   card: {
     flex: 1,
     flexDirection: 'row',
-  },
-  first: {
-    width: "30%",
-    height: '100%',
-  },
-  second: {
-    width: "50%",
-    height: '100%',    
-    backgroundColor: "blue"
-  },
-  third: {
-    width: "20%",
-    height: '100%',
-  },
-  barFoto:{
-    width: "100%",
-    height: '50%',
-    backgroundColor: "yellow"
-  },
-  barStyle: {
-    width: "100%",
-    height: '20%',
-    backgroundColor: "blue"
-  },
-  barBadge: {
-    width: "100%",
-    height: '30%',
-    backgroundColor: "red"
-  },
-  fav: {
-    width: "100%",
-    height: '35%',
-    backgroundColor: "red"
-  },
-  crowd: {
-    width: "100%",
-    height: '65%',
-    backgroundColor: "pink",
-    justifyContent: 'center',
+    justifyContent: 'space-around',
     alignItems: 'center',
-    padding: 10,
   },
-  img: {
-    flex:1,
-    resizeMode: 'contain',
+  badges: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+  },
+  info:{
+    flex: 2,
+    flexDirection: 'column',
+    justifyContent: 'space-between',    
+    alignItems: 'flex-start',
+  },
+  more: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'space-between',    
+    alignItems: 'flex-end',
+    padding: 10
   }
 });

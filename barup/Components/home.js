@@ -76,7 +76,8 @@ class Home extends React.Component {
       style: {
         familiar: 0,
         luxurious: 0,
-        youthful: 0
+        youthful: 0,
+        sport: 0
       }
     }
   }
@@ -200,7 +201,6 @@ class Home extends React.Component {
                   // available options: https://developers.google.com/places/web-service/autocomplete
                   key: 'AIzaSyAWOG03GylQLc2J8fKA_v5rVjRW1KlRPU8',
                   language: 'en', // language of the results
-                  types: '(cities)' // default: 'geocode'
                 }}
                 
                 styles={{
@@ -274,7 +274,8 @@ class Home extends React.Component {
             </ListItem>
       
             <ListItem>
-              <CheckBox checked={this.state.luxurious} color="black" onPress={ () => this.setState({ luxurious: !this.state.luxurious })}/>
+              <CheckBox checked={this.state.luxurious} color="black" onPress={ () => {this.setState({ luxurious: !this.state.luxurious ,
+                }),this.params.style.luxurious = (!this.state.luxurious ? 1 : 0)}}/>
               <Body>
                 <Text>   Luxurious</Text>
               </Body>
