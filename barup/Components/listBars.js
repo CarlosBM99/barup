@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import { StyleSheet, Text, View, StatusBar, ListView, Image,TouchableOpacity, FlatList, Dimensions, TouchableHighlight, ActivityIndicator, Platform, PixelRatio  } from 'react-native';
 import { Container, Content, Header, Form, Input, Item, Button, Label, Icon, List, ListItem, Card, CardItem, Thumbnail, Body, Left, Right} from 'native-base'
+import RF from "react-native-responsive-fontsize";
 
 var {height, width} = Dimensions.get('window');
 const {
@@ -175,18 +176,38 @@ class listBars extends Component {
           <Card style={styles.card}>
             <View style={styles.first}>
               <View style={styles.barFoto}>
+                <Image style={styles.img2} source={barImages[2]}/>
               </View>
               <View style={styles.barStyle}>
+                <Text style={{fontSize:RF(3.3),color:'white'}}>Luxurious</Text>
               </View>
               <View style={styles.barBadge}>
+                {this.renderDartsBadge(item)}
+                {this.renderFootballBadge(item)}
+                {this.renderBilliardsBadge(item)}
               </View>
             </View>
             <View style={styles.second}>
-              
+              <View style={styles.name}>
+                <Text style={{fontSize:RF(3.5)}}>{item.val().name}</Text>                
+              </View>
+              <View style={styles.location}>
+                <Text style={{fontSize:RF(3.3)}}>Marina</Text>                
+              </View>
+              <View style={styles.rating}>
+                <Text style={{fontSize:RF(4)}}>Rating</Text>                
+              </View>
+              <View style={styles.price}>
+                <Text style={{fontSize:RF(3.5)}}>{item.val().beerPrice}€
+                  <Text style={{fontSize:RF(3)}}>/Beer</Text> 
+                </Text> 
+                               
+                
+              </View>
             </View>
             <View style={styles.third}>
               <View style={styles.fav}>
-              
+                <Icon style={{fontSize:RF(8)}} name="ios-star"/>
               </View >
               <View style={styles.crowd}>
                 <Image style={styles.img} source={require('../assets/beer/beer1.png')}/>
@@ -260,15 +281,16 @@ const styles = StyleSheet.create({
   card: {
     flex: 1,
     flexDirection: 'row',
+    backgroundColor: '#ded4d4'
   },
   first: {
     width: "30%",
     height: '100%',
+    
   },
   second: {
     width: "50%",
     height: '100%',    
-    backgroundColor: "blue"
   },
   third: {
     width: "20%",
@@ -277,33 +299,68 @@ const styles = StyleSheet.create({
   barFoto:{
     width: "100%",
     height: '50%',
-    backgroundColor: "yellow"
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   barStyle: {
     width: "100%",
     height: '20%',
-    backgroundColor: "blue"
+    backgroundColor: "orange",
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   barBadge: {
     width: "100%",
     height: '30%',
-    backgroundColor: "red"
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   fav: {
     width: "100%",
     height: '35%',
-    backgroundColor: "red"
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   crowd: {
     width: "100%",
     height: '65%',
-    backgroundColor: "pink",
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 10,
   },
   img: {
     flex:1,
     resizeMode: 'contain',
+    padding: 10
+  },
+  img2: {
+    flex: 1,
+    width: "100%",
+    height: '50%',
+    resizeMode: 'cover',
+  },
+  name: {
+    width: "100%",
+    height: '30%',
+    paddingLeft: 7,  
+  },
+  location: {
+    width: "100%",
+    height: '15%',
+    paddingLeft: 7,  
+  },
+  rating: {
+    width: "100%",
+    height: '25%',
+    paddingLeft: 7,  
+    
+  },
+  price: {
+    width: "100%",
+    height: '30%',
+    paddingLeft: 7,  
+    
   }
+
 });
