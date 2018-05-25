@@ -3,14 +3,26 @@ import { Platform, PixelRatio,StyleSheet, Text, View, StatusBar, ListView, Image
 import { Container, Content, Header, Form, Input, Item, Button, Label, Icon, List, ListItem, Card, CardItem, Thumbnail, Body, Left, Right} from 'native-base'
 import { Rating } from 'react-native-elements';
 import RF from "react-native-responsive-fontsize";
+import MapView from "react-native-maps";
 
 var {width,height} = Dimensions.get('window')
 
-const dartCheck = require('../assets/dart_badge.png');
-const footballCheck = require('../assets/football_badge.png');
-const billiardsCheck = require('../assets/billiards_badge.png');
+dartBadge = require('../assets/dart_badge.png');
+footballBadge = require('../assets/football_badge.png');
+billiardsBadge = require('../assets/billiards_badge.png');
+dartUnbadge = require('../assets/dart_unbadge.png');
+footballUnbadge = require('../assets/football_unbadge.png');
+billiardsUnbadge = require('../assets/billiards_unbadge.png');
 
 class Detail extends Component {
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      ambient: "null",
+    }
+  }
 
   static navigationOptions = { 
     headerTitle: "BarUp", 
@@ -23,15 +35,71 @@ class Detail extends Component {
       backgroundColor: 'black'
     }
   }
-  
+
+  renderDartsBadge(info)  {
+    showDartBadge = info.val().darts;
+    var tempDartBadge = showDartBadge? dartBadge : dartUnbadge;
+    return (
+      <Image
+        style={styles.bdg} 
+        source={ tempDartBadge }
+      />
+    );
+  }
+
+  renderFootballBadge(info)  {
+    showFootballBadge = info.val().football;
+    var tempFootballBadge = showFootballBadge? footballBadge : footballUnbadge;
+    return (
+      <Image
+        style={styles.bdg} 
+        source={ tempFootballBadge }
+      />
+    );
+  }
+
+  renderBilliardsBadge(info)  {
+    showBilliardsBadge = info.val().billiards;
+    var tempBilliardsBadge = showBilliardsBadge? billiardsBadge : billiardsUnbadge;
+    return (
+      <Image
+        style={styles.bdg} 
+        source={ tempBilliardsBadge }
+      />
+    );
+  }
+
+  renderCrowd(info) {
+    var crowd = info.val().prediction;
+    if(crowd == 0)
+    {
+      return(
+        <Text style={styles.crowd0}>Empty</Text>
+      );
+    }else if(crowd == 1)
+    {
+      return(
+        <Text style={styles.crowd1}>Half-Full</Text>
+      );
+    }else if(crowd == 2)
+    {
+      return(
+        <Text style={styles.crowd2}>Full</Text>
+      );
+    }
+  }
+
 	render(){
 
     const { navigation } = this.props;
     const info = navigation.getParam('info', 'NO-ID');
 
+    var listAmbient = ["Familiar", "Youthful", "Luxurious", "Sport"];
+    var nAmbient = info.val().atmosphere - 1;
+
 		return(
 		  <View style={styles.container}>
-
+      
         <View style={{flexDirection: 'row'}}>
           <View style={styles.name}>
             <Text style={{fontSize:RF(3)}}>{info.val().name}</Text>
@@ -54,7 +122,7 @@ class Detail extends Component {
         </View>
 
         <View style={styles.ambient}>
-          <Text style={{fontSize:RF(3),color:'white'}}>Luxurious</Text>
+          <Text style={{fontSize:RF(3),color:'white'}}>{listAmbient[nAmbient]}</Text>
         </View>
 
         <View style={styles.barImage}>
@@ -78,41 +146,60 @@ class Detail extends Component {
 
           <View style={styles.priceContainer}>
             <View style={styles.itemPrice}>
-              <Text style={{fontSize:RF(3.5)}}>{info.val().beerPrice}€</Text>
+              <Text style={{fontSize:RF(3.5)}}>{Number(info.val().beerPrice).toFixed(2)}€</Text>
             </View>
 
             <View style={styles.itemPrice}>
-              <Text style={{fontSize:RF(3.5)}}>{info.val().beerPrice}€</Text>
+              <Text style={{fontSize:RF(3.5)}}>{Number(info.val().sodaPrice).toFixed(2)}€</Text>
             </View>
 
             <View style={styles.itemPrice}>
-              <Text style={{fontSize:RF(3.5)}}>{info.val().beerPrice}€</Text>
+              <Text style={{fontSize:RF(3.5)}}>{Number(info.val().coffeePrice).toFixed(2)}€</Text>
             </View>
           </View>
 
           <View style={styles.infoContainer}>
             <View style={styles.badgeContainer}>
               <View style={styles.badgeStyle}>
-                <Image style={styles.bdg} source={dartCheck}/>
+                {this.renderDartsBadge(info)}
               </View>
 
               <View style={styles.badgeStyle}>
-                <Image style={styles.bdg} source={footballCheck}/>
+                {this.renderFootballBadge(info)}
               </View>
 
               <View style={styles.badgeStyle}>
-                <Image style={styles.bdg} source={billiardsCheck}/>
+                {this.renderBilliardsBadge(info)}
               </View>
             </View>
 
             <View style={styles.crowdContainer}>
-              <Text style={styles.crowd}>Half-Full</Text>
+              {this.renderCrowd(info)}
             </View>
           </View>
         </View>
         
         <View style={styles.barMap}>
-          <Text>Bar Map</Text>
+          <MapView
+            style={{width:"100%", height:"100%"}}
+            region={{
+              longitude: info.val().latitude,
+              latitude: info.val().longitude,
+              latitudeDelta: 0.01,
+              longitudeDelta: 0.01
+            }}
+          >
+            
+            <MapView.Marker
+              coordinate={{
+                longitude: info.val().latitude,
+                latitude: info.val().longitude,
+              }}
+
+              title={info.val().name}
+            />
+
+          </MapView>
         </View>
         
 
@@ -195,17 +282,30 @@ const styles = StyleSheet.create({
     justifyContent:'center',
     alignItems:'center',
   },
-  crowd:{
+  crowd0:{
+    borderRadius:20,
+    padding:15,
+    borderColor:'green',
+    borderWidth:4,
+    fontSize:RF(4),
+  },
+  crowd1:{
     borderRadius:20,
     padding:15,
     borderColor:'orange',
     borderWidth:4,
     fontSize:RF(4),
   },
+  crowd2:{
+    borderRadius:20,
+    padding:15,
+    borderColor:'red',
+    borderWidth:4,
+    fontSize:RF(4),
+  },
   barMap: {
     width: "100%",
     height: (height)*0.35,
-    backgroundColor:'grey',
     alignItems:'center',
     justifyContent:'center',
   },
