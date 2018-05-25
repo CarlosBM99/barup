@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import { StyleSheet, Text, View, StatusBar, ListView, Image,TouchableOpacity, FlatList, Dimensions, TouchableHighlight, ActivityIndicator, Platform, PixelRatio  } from 'react-native';
 import { Container, Content, Header, Form, Input, Item, Button, Label, Icon, List, ListItem, Card, CardItem, Thumbnail, Body, Left, Right} from 'native-base'
 import RF from "react-native-responsive-fontsize";
-import { Rating } from 'react-native-elements';
 
 var {height, width} = Dimensions.get('window');
 const {
@@ -50,11 +49,6 @@ barImages = [
   require('../assets/bar4.jpg'),
   require('../assets/bar5.jpg'),
 ]
-beerImages = [
-  require('../assets/beer/beer1.png'),
-  require('../assets/beer/beer2.png'),
-  require('../assets/beer/beer3.png'),
-]
 
 const numColumns = 3;
 class listBars extends Component {
@@ -69,6 +63,7 @@ class listBars extends Component {
       refreshing: false,
       loaging: false,
       firstKnownKey: null,
+      imgFire: ""
     }
   }
   static navigationOptions = { 
@@ -134,10 +129,10 @@ class listBars extends Component {
     //console.log(that.state.firstKnownKey)    
     var newData = [...that.state.listViewData]
     var ref = firebase.database().ref('/bars')
-    ref.orderByKey().limitToFirst(6).on('child_added', function(childSnapshot, prevChildKey) {
+    ref.orderByKey().limitToFirst(4).on('child_added', function(childSnapshot, prevChildKey) {
       //console.log(childSnapshot.val())
       that.state.firstKnownKey = childSnapshot.key;
-      //console.log("KEY:",that.state.firstKnownKey)
+      console.log("KEY:",that.state.firstKnownKey)
       newData.push(childSnapshot)
     },
     that.setState({ listViewData: newData, refreshing: false, loading: false}));
@@ -149,10 +144,10 @@ class listBars extends Component {
     var f = that.state.firstKnownKey   
     var newData = [...that.state.listViewData]
     var ref = firebase.database().ref('/bars')
-    ref.orderByKey().startAt(that.state.firstKnownKey).limitToFirst(7).on('child_added', function(childSnapshot, prevChildKey) {
+    ref.orderByKey().startAt(that.state.firstKnownKey).limitToFirst(5).on('child_added', function(childSnapshot, prevChildKey) {
       that.state.firstKnownKey = childSnapshot.key;
       if(f !== that.state.firstKnownKey){
-        //console.log("CHILD: ", childSnapshot.key)
+        console.log("CHILD: ", childSnapshot.key)
         newData.push(childSnapshot)
       } else {
         that.setState({ listViewData: newData, refreshing: false, loading: false})
@@ -163,7 +158,9 @@ class listBars extends Component {
   }
   
   componentDidMount() {
-      this.makeRemoteRequest() 
+    this.getImgFire()
+    this.makeRemoteRequest()
+    
   }
 
   handleLoadMore = () => {
@@ -174,15 +171,12 @@ class listBars extends Component {
       setTimeout(function(){that.makeRemoteRequest2()},2000)
     })
   }
-
-  getCrowd(pred){
-    if(pred === 0){
-      return beerImages[0]
-    } else if (pred === 1){
-      return beerImages[1]      
-    } else {
-      return beerImages[2]      
-    }
+  getImgFire = () => {
+    var path = firebase.storage().ref().child('images/bar2.jpg').getDownloadURL().then((url) => {
+      console.log(url);
+      let imgURL = JSON.stringify(url)
+      this.setState({imgFire: url})
+    })
   }
   renderItem = ({ item }) => {
     return (
@@ -191,7 +185,7 @@ class listBars extends Component {
           <Card style={styles.card}>
             <View style={styles.first}>
               <View style={styles.barFoto}>
-                <Image style={styles.imgBar} source={barImages[2]}/>
+                <Image style={styles.img2} source={{uri: this.state.imgFire}}/>
               </View>
               <View style={styles.barStyle}>
                 <Text style={{fontSize:RF(3.3),color:'white'}}>Luxurious</Text>
@@ -204,24 +198,17 @@ class listBars extends Component {
             </View>
             <View style={styles.second}>
               <View style={styles.name}>
-                <Text style={{fontSize:RF(3.2)}}>{item.val().name}</Text>                
+                <Text style={{fontSize:RF(3.5)}}>{item.val().name}</Text>                
               </View>
               <View style={styles.location}>
-                <Text style={{fontSize:RF(3.1)}}>Marina</Text>                
+                <Text style={{fontSize:RF(3.3)}}>Marina</Text>                
               </View>
               <View style={styles.rating}>
-                <Rating
-                  fractions={1}
-                  startingValue={item.val().rating}
-                  readonly
-                  imageSize={25}
-                  onFinishRating={this.ratingCompleted}
-                  style={{backgroundColor:'#000'}} 
-                />               
+                <Text style={{fontSize:RF(4)}}>Rating</Text>                
               </View>
               <View style={styles.price}>
-                <Text style={{fontSize:RF(4)}}>{item.val().beerPrice}€
-                  <Text style={{fontSize:RF(3.1)}}>/Beer</Text> 
+                <Text style={{fontSize:RF(3.5)}}>{item.val().beerPrice}€
+                  <Text style={{fontSize:RF(3)}}>/Beer</Text> 
                 </Text> 
                                
                 
@@ -232,7 +219,7 @@ class listBars extends Component {
                 <Icon style={{fontSize:RF(8)}} name="ios-star"/>
               </View >
               <View style={styles.crowd}>
-                <Image style={styles.icobeer} source={this.getCrowd(item.val().prediction)}/>
+                <Image style={styles.img} source={require('../assets/beer/beer1.png')}/>
               </View >
               
             </View >
@@ -253,7 +240,7 @@ class listBars extends Component {
         refreshing={this.state.refreshing}
         //onRefresh={this.handleRefresh}
         onEndReached={this.handleLoadMore}
-        onEndReachedThreshold={0}
+        onEndReachedThreshold={1}
         ListFooterComponent={() => { // replaces renderFooter={() => {
           if(this.state.refreshing){
             return (
@@ -278,7 +265,7 @@ const styles = StyleSheet.create({
     flex: 1
   },
   item: {
-    backgroundColor: '#ded4d4',
+    backgroundColor: '#dce3ef',
     alignItems: 'center',
     justifyContent: 'center',
     flex: 1,
@@ -303,7 +290,7 @@ const styles = StyleSheet.create({
   card: {
     flex: 1,
     flexDirection: 'row',
-    backgroundColor: 'white'
+    backgroundColor: '#ded4d4'
   },
   first: {
     width: "30%",
@@ -312,7 +299,7 @@ const styles = StyleSheet.create({
   },
   second: {
     width: "50%",
-    height: '100%',   
+    height: '100%',    
   },
   third: {
     width: "20%",
@@ -352,11 +339,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 10
   },
-  icobeer: {
+  img: {
     flex:1,
     resizeMode: 'contain',
   },
-  imgBar: {
+  img2: {
     flex: 1,
     width: "100%",
     height: '50%',
@@ -364,27 +351,24 @@ const styles = StyleSheet.create({
   },
   name: {
     width: "100%",
-    height: '30%', 
-    alignItems: 'center',
-    justifyContent: 'center',
+    height: '30%',
+    paddingLeft: 7,  
   },
   location: {
     width: "100%",
     height: '15%',
-    alignItems: 'center',
-    justifyContent: 'center',
+    paddingLeft: 7,  
   },
   rating: {
     width: "100%",
     height: '25%',
-    justifyContent: 'center',
-    alignItems: 'center',
+    paddingLeft: 7,  
+    
   },
   price: {
     width: "100%",
-    height: '30%', 
-    alignItems: 'center',
-    justifyContent: 'center',
+    height: '30%',
+    paddingLeft: 7,  
     
   }
 
