@@ -130,7 +130,7 @@ class Home extends React.Component {
     });
     var key = firebase.database().ref('/status_search').push().key
     firebase.database().ref('/status_search').child(key).set({ id: key, it: params, state: 1 })
-    fetch('https://f8ddbc29.ngrok.io/test/results.php?name='+key+'&run=true');
+    fetch('https://0c296746.ngrok.io/barup/results.php?name='+key+'&run=true');
     var that = this
     var int = setInterval(() => {
       var ref = firebase.database().ref('/status_search/')
