@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { StyleSheet, Text, View, StatusBar, ListView, Image,TouchableOpacity, FlatList, Dimensions, TouchableHighlight, ActivityIndicator, Platform, PixelRatio  } from 'react-native';
+import { StyleSheet, Text, View, StatusBar, ListView, Image, TouchableOpacity, FlatList, Dimensions, TouchableHighlight, ActivityIndicator, Platform, PixelRatio  } from 'react-native';
 import { Container, Content, Header, Form, Input, Item, Button, Label, Icon, List, ListItem, Card, CardItem, Thumbnail, Body, Left, Right} from 'native-base'
 import RF from "react-native-responsive-fontsize";
 import { Rating } from 'react-native-elements';
@@ -89,34 +89,34 @@ class listBars extends Component {
     return navigate('Detail',{ info: item});
   }
 
-  renderDartsBadge(item)  {
-    showDartBadge = item.val().darts;
-    var tempDartBadge = showDartBadge? dartBadge : emptyBadge;
+  renderDartsBadge(info)  {
+    showDartBadge = info.val().darts;
+    var tempDartBadge = showDartBadge? dartBadge : dartUnbadge;
     return (
       <Image
-        style={{height:34, width:34}} 
+        style={styles.bdg} 
         source={ tempDartBadge }
       />
     );
   }
 
-  renderFootballBadge(item)  {
-    showFootballBadge = item.val().football;
-    var tempFootballBadge = showFootballBadge? footballBadge : emptyBadge;
+  renderFootballBadge(info)  {
+    showFootballBadge = info.val().football;
+    var tempFootballBadge = showFootballBadge? footballBadge : footballUnbadge;
     return (
       <Image
-        style={{height:34, width:34}} 
+        style={styles.bdg} 
         source={ tempFootballBadge }
       />
     );
   }
 
-  renderBilliardsBadge(item)  {
-    showBilliardsBadge = item.val().billiards;
-    var tempBilliardsBadge = showBilliardsBadge? billiardsBadge : emptyBadge;
+  renderBilliardsBadge(info)  {
+    showBilliardsBadge = info.val().billiards;
+    var tempBilliardsBadge = showBilliardsBadge? billiardsBadge : billiardsUnbadge;
     return (
       <Image
-        style={{height:34, width:34}} 
+        style={styles.bdg} 
         source={ tempBilliardsBadge }
       />
     );
@@ -185,16 +185,18 @@ class listBars extends Component {
     }
   }
   renderItem = ({ item }) => {
+    var listAmbient = ["Familiar", "Youthful", "Luxurious", "Sport"];
+    var nAmbient = item.val().atmosphere - 1;
     return (
       <TouchableHighlight onPress={() => this.goToNextScreen(item)}>
         <View style={[{ width: (width) }, { height: (height) / 4 }, { marginBottom: 0 }, { paddingVertical: 0 }]}>
           <Card style={styles.card}>
             <View style={styles.first}>
               <View style={styles.barFoto}>
-                <Image style={styles.imgBar} source={barImages[2]}/>
+                <Image style={styles.imgBar} source={{uri:"https://firebasestorage.googleapis.com/v0/b/barup-ca0f9.appspot.com/o/images%2Fbar2.jpg?alt=media&token=bc93eb25-83e3-4ad1-8e09-a586d33a8fc1"}}/>
               </View>
               <View style={styles.barStyle}>
-                <Text style={{fontSize:RF(3.3),color:'white'}}>Luxurious</Text>
+                <Text style={{fontSize:RF(3.3),color:'black'}}>{listAmbient[nAmbient]}</Text>
               </View>
               <View style={styles.barBadge}>
                 {this.renderDartsBadge(item)}
@@ -204,10 +206,10 @@ class listBars extends Component {
             </View>
             <View style={styles.second}>
               <View style={styles.name}>
-                <Text style={{fontSize:RF(3.2)}}>{item.val().name}</Text>                
+                <Text style={{fontSize:RF(3)}}>{item.val().name}</Text>                
               </View>
               <View style={styles.location}>
-                <Text style={{fontSize:RF(3.1)}}>Marina</Text>                
+                <Text style={{fontSize:RF(2.5)}}>Marina</Text>                
               </View>
               <View style={styles.rating}>
                 <Rating
@@ -229,7 +231,10 @@ class listBars extends Component {
             </View>
             <View style={styles.third}>
               <View style={styles.fav}>
-                <Icon style={{fontSize:RF(8)}} name="ios-star"/>
+                <Icon style={{fontSize:RF(6)}} name="ios-star"/>
+              </View >
+              <View style={styles.textCrowd}>
+                <Text style={{fontSize:RF(1.5)}}>Crowd level</Text>
               </View >
               <View style={styles.crowd}>
                 <Image style={styles.icobeer} source={this.getCrowd(item.val().prediction)}/>
@@ -243,6 +248,7 @@ class listBars extends Component {
     );
   };
   render() { 
+
     return (
       <View style={styles.container}>
       <FlatList
@@ -341,16 +347,22 @@ const styles = StyleSheet.create({
   },
   fav: {
     width: "100%",
-    height: '35%',
+    height: '30%',
     alignItems: 'center',
     justifyContent: 'center',
   },
+  textCrowd: {
+    width: "100%",
+    height: '10%',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+  },
   crowd: {
     width: "100%",
-    height: '65%',
+    height: '60%',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 10
+    padding: 7
   },
   icobeer: {
     flex:1,
@@ -386,6 +398,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     
+  },
+  bdg:{
+    flex:1,
+    resizeMode: 'contain',
   }
 
 });
