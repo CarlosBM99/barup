@@ -48,25 +48,26 @@ if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 }
 
+const initialState = {
+  showDarts: false,
+  showFootball: false,
+  showBilliards: false,
+  familiar: false,
+  youthful: false,
+  luxurious: false,
+  sport: false,
+  beerPrice: false,
+  rating: false,
+  crowdness: false,
+  loading: false,
+  st: 0,
+  places: false,
+  showToast: false,
+}
 class Home extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-        showDarts: false,
-        showFootball: false,
-        showBilliards: false,
-        familiar: false,
-        youthful: false,
-        luxurious: false,
-        sport: false,
-        beerPrice: false,
-        rating: false,
-        crowdness: false,
-        loading: false,
-        st: 0,
-        places: false,
-        showToast: false
-    }
+    this.state = initialState
     this.params = {
       badgets: {
         billards: this.state.showBilliards ? 1: 0,
@@ -84,6 +85,25 @@ class Home extends React.Component {
         longitude: 1
       }
     }
+  }
+  getParams(){
+    return ({
+      badgets: {
+        billards: this.state.showBilliards ? 1: 0,
+        darts: this.state.showDarts ? 1: 0,
+        table_football: this.state.showFootball ? 1: 0
+      },
+      order: {
+        beer_prace: this.state.beerPrice ? 1: 0,
+        crowdness: this.state.crowdness ? 1: 0,
+        rating: this.state.rating ? 1: 0
+      },
+      atmosphere: this.state.sport ? 0 : this.state.youthful ? 1 : this.state.luxurious ? 2 : this.state.familiar ? 3 : -1,
+      location: {
+        latitude: 1,
+        longitude: 1
+      }
+    })
   }
   renderDarts()  {
     var tempDarts = this.state.showDarts? dartCheck : dartUncheck;
@@ -129,7 +149,7 @@ class Home extends React.Component {
     headerBackTitle: null,
   }
   async a(props,params){
-    if(this.params.location.latitude === 0 || this.params.location.longitude === 0){
+    if(params.location.latitude === 0 || params.location.longitude === 0){
       Toast.show({
         text: 'You have to specify the location',
         buttonText: 'Okay'
@@ -139,8 +159,9 @@ class Home extends React.Component {
         loading: true
       });
       var key = firebase.database().ref('/status_search').push().key
+      params = this.getParams()      
       console.log(params)
-      firebase.database().ref('/status_search').child(key).set({ id: key, it: params, state: 0 })
+      firebase.database().ref('/status_search').child(key).set({ id: key, it: params, state: 1 })
       fetch('https://d93d62eb.ngrok.io/barup/results.php?name='+key+'&run=true');
       var that = this
       var int = setInterval(() => {
@@ -156,10 +177,7 @@ class Home extends React.Component {
           });
           if(this.state.st === 1){
             props.navigation.navigate('listBars')
-            that.setState({
-              loading: false,
-              st: 0
-            }) 
+            that.setState(initialState) 
             firebase.database().ref('status_search/' + key).set(null)
             clearInterval(int);
           }
@@ -249,7 +267,7 @@ class Home extends React.Component {
     )
     
   }
-  changeVal(value,name){
+  changeVal = (value,name) =>{
     if(value === true){
       if(this.state.youthful || this.state.sport || this.state.luxurious || this.state.familiar){
         Toast.show({
