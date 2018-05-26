@@ -78,12 +78,7 @@ class Home extends React.Component {
         crowdness: this.state.crowdness ? 1: 0,
         rating: this.state.rating ? 1: 0
       },
-      style: {
-        familiar: this.state.familiar ? 1: 0,
-        luxurious: this.state.luxurious ? 1: 0,
-        youthful: this.state.youthful ? 1: 0,
-        sport: this.state.sport ? 1: 0
-      },
+      atmosphere: this.state.sport ? 0 : this.state.youthful ? 1 : this.state.luxurious ? 2 : this.state.familiar ? 3 : -1,
       location: {
         latitude: 1,
         longitude: 1
@@ -144,7 +139,8 @@ class Home extends React.Component {
         loading: true
       });
       var key = firebase.database().ref('/status_search').push().key
-      firebase.database().ref('/status_search').child(key).set({ id: key, it: params, state: 1 })
+      console.log(params)
+      firebase.database().ref('/status_search').child(key).set({ id: key, it: params, state: 0 })
       fetch('https://d93d62eb.ngrok.io/barup/results.php?name='+key+'&run=true');
       var that = this
       var int = setInterval(() => {
