@@ -4,6 +4,9 @@ import { Container, Content, Header, Form, Input, Item, Button, Label, Icon, Lis
 import { Rating } from 'react-native-elements';
 import RF from "react-native-responsive-fontsize";
 import MapView from "react-native-maps";
+import Geocoder from 'react-native-geocoding';
+
+Geocoder.init('AIzaSyAWOG03GylQLc2J8fKA_v5rVjRW1KlRPU8'); 
 
 var {width,height} = Dimensions.get('window')
 
@@ -20,7 +23,7 @@ class Detail extends Component {
     super(props);
 
     this.state = {
-      ambient: "null",
+      add:"null",
     }
   }
 
@@ -94,8 +97,15 @@ class Detail extends Component {
     const { navigation } = this.props;
     const info = navigation.getParam('info', 'NO-ID');
 
-    var listAmbient = ["Familiar", "Youthful", "Luxurious", "Sport"];
+    var listAmbient = ["Sport", "Youthful", "Luxurious", "Familiar"];
     var nAmbient = info.val().atmosphere - 1;
+
+    Geocoder.from(info.val().longitude, info.val().latitude)
+        .then(json => {
+        	var addressComponent = json.results[0].formatted_address ;
+            this.setState({add:addressComponent});
+        })
+        .catch(error => console.warn(error));
 
 		return(
 		  <View style={styles.container}>
@@ -197,6 +207,7 @@ class Detail extends Component {
               }}
 
               title={info.val().name}
+              description={this.state.add}
             />
 
           </MapView>
@@ -257,6 +268,8 @@ const styles = StyleSheet.create({
     marginRight:"10%",
     height:"33%",
     padding:10,
+    alignItems:'center',
+    justifyContent:'center',
   },
   infoContainer: {
     width: "50%",
@@ -310,8 +323,10 @@ const styles = StyleSheet.create({
     justifyContent:'center',
   },
   img: {
-    flex:1,
-    resizeMode: 'stretch',
+    flex: 1,
+    width: "100%",
+    height: (height)*0.25,
+    resizeMode: 'cover',
   },
   bdg:{
     flex:1,
