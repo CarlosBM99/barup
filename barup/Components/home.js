@@ -241,7 +241,33 @@ class Home extends React.Component {
     )
     
   }
-
+  changeVal(value,name){
+    if(value === true){
+      if(this.state.youthful || this.state.sport || this.state.luxurious || this.state.familiar){
+        alert("You can only select one!")
+      } else {
+        if(name === 'youthful'){
+          this.setState({youthful: value})
+        } else if (name === 'sport'){
+          this.setState({sport: value})
+        } else if (name === 'luxurious'){
+          this.setState({luxurious: value})
+        } else {
+          this.setState({familiar: value})
+        }
+      }
+    } else {
+      if(name === 'youthful'){
+        this.setState({youthful: value})
+      } else if (name === 'sport'){
+        this.setState({sport: value})
+      } else if (name === 'luxurious'){
+        this.setState({luxurious: value})
+      } else {
+        this.setState({familiar: value})
+      }
+    }
+  }
   rest(){
     return (
       <View style={styles.container}>
@@ -260,24 +286,24 @@ class Home extends React.Component {
           <View style={styles.barStyles}>
             <View style={styles.barStyles1}>
               <View style={styles.barStyles11}>
-                <Text style={styles.textitem}>Familiar</Text><Switch  onValueChange={(value) => {this.setState({familiar: value})}} 
+                <Text style={styles.textitem}>Familiar</Text><Switch  onValueChange={(value) => {this.changeVal(value,'familiar')}} 
                                                                       value={this.state.familiar}
                                                                       onTintColor="#fed849"/> 
                 </View>
               <View style={styles.barStyles12}>
-                <Text style={styles.textitem} >Youthful</Text><Switch onValueChange={(value) => {this.setState({youthful: value})}} 
+                <Text style={styles.textitem} >Youthful</Text><Switch onValueChange={(value) => {this.changeVal(value,'youthful')}} 
                                                                       value={this.state.youthful}
                                                                       onTintColor="#fed849"/> 
               </View>
             </View>
             <View style={styles.barStyles2}>
               <View style={styles.barStyles11}>
-                <Text style={styles.textitem}>Luxurious</Text><Switch onValueChange={(value) => {this.setState({luxurious: value})}} 
+                <Text style={styles.textitem}>Luxurious</Text><Switch onValueChange={(value) => {this.changeVal(value,'luxurious')}} 
                                                                       value={this.state.luxurious}
                                                                       onTintColor="#fed849"/>
                 </View>
               <View style={styles.barStyles12}>
-                <Text style={styles.textitem} >Sport</Text><Switch onValueChange={(value) => {this.setState({sport: value})}} 
+                <Text style={styles.textitem} >Sport</Text><Switch onValueChange={(value) => {this.changeVal(value,'sport')}} 
                                                                       value={this.state.sport}
                                                                       onTintColor="#fed849"/>
               </View>
