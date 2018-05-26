@@ -15,7 +15,7 @@ import {
 } from 'react-native';
 import {Button} from 'react-native-elements'
 import {Dropdown} from 'react-native-material-dropdown'
-import {Icon,Input,Item,CheckBox,Body,ListItem, Content, Container} from 'native-base'
+import {Icon,Input,Item,CheckBox,Body,ListItem, Content, Container, Toast, Root} from 'native-base'
 import { TabNavigator}  from 'react-navigation'
 import SegmentedControlTab from 'react-native-segmented-control-tab';
 import RF from "react-native-responsive-fontsize";
@@ -64,7 +64,8 @@ class Home extends React.Component {
         crowdness: false,
         loading: false,
         st: 0,
-        places: false
+        places: false,
+        showToast: false
     }
     this.params = {
       badgets: {
@@ -82,6 +83,10 @@ class Home extends React.Component {
         luxurious: this.state.luxurious ? 1: 0,
         youthful: this.state.youthful ? 1: 0,
         sport: this.state.sport ? 1: 0
+      },
+      location: {
+        latitude: 1,
+        longitude: 1
       }
     }
   }
@@ -129,38 +134,45 @@ class Home extends React.Component {
     headerBackTitle: null,
   }
   async a(props,params){
-    this.setState({
-      loading: true
-    });
-    var key = firebase.database().ref('/status_search').push().key
-    firebase.database().ref('/status_search').child(key).set({ id: key, it: params, state: 1 })
-    fetch('https://d93d62eb.ngrok.io/barup/results.php?name='+key+'&run=true');
-    var that = this
-    var int = setInterval(() => {
-      var ref = firebase.database().ref('/status_search/')
-      ref.once("value")
-        .then(function(snapshot) {
-          var childKey = snapshot.child(key+'/state').val(); // "last"
-          if(childKey === 1){
+    if(this.params.location.latitude === 0 || this.params.location.longitude === 0){
+      Toast.show({
+        text: 'You have to specify the location',
+        buttonText: 'Okay'
+      })
+    } else {
+      this.setState({
+        loading: true
+      });
+      var key = firebase.database().ref('/status_search').push().key
+      firebase.database().ref('/status_search').child(key).set({ id: key, it: params, state: 1 })
+      fetch('https://d93d62eb.ngrok.io/barup/results.php?name='+key+'&run=true');
+      var that = this
+      var int = setInterval(() => {
+        var ref = firebase.database().ref('/status_search/')
+        ref.once("value")
+          .then(function(snapshot) {
+            var childKey = snapshot.child(key+'/state').val(); // "last"
+            if(childKey === 1){
+              that.setState({
+                st: childKey,
+            })
+          }
+          });
+          if(this.state.st === 1){
+            props.navigation.navigate('listBars')
             that.setState({
-              st: childKey,
-          })
-        }
-        });
-        if(this.state.st === 1){
-          props.navigation.navigate('listBars')
-          that.setState({
-            loading: false,
-            st: 0
-          }) 
-          firebase.database().ref('status_search/' + key).set(null)
-          clearInterval(int);
-        }
+              loading: false,
+              st: 0
+            }) 
+            firebase.database().ref('status_search/' + key).set(null)
+            clearInterval(int);
+          }
+        
+      }, 500);
       
-    }, 500);
-    
-    //key = firebase.database().ref('/status_search').push().key
-    //firebase.database().ref('/status_search').child(key).set({ name: "AAAAAA" })
+      //key = firebase.database().ref('/status_search').push().key
+      //firebase.database().ref('/status_search').child(key).set({ name: "AAAAAA" })
+    }
   }
   b(){
     firebase.database().ref('status_search/' + key).set(null)
@@ -244,7 +256,11 @@ class Home extends React.Component {
   changeVal(value,name){
     if(value === true){
       if(this.state.youthful || this.state.sport || this.state.luxurious || this.state.familiar){
-        alert("You can only select one!")
+        Toast.show({
+          text: 'You can only select one!',
+          buttonText: 'Okay'
+        })
+        
       } else {
         if(name === 'youthful'){
           this.setState({youthful: value})
@@ -388,13 +404,13 @@ class Home extends React.Component {
   render() {
 
     return (
+      <Root>
       <View style={{flex:1}}>
       { this.state.places ? this.Places() :  this.rest()
           
       }
-      
         </View>
-      
+      </Root>
         
     );
   }
