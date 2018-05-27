@@ -447,7 +447,7 @@ class Home extends React.Component {
               
             /> :
                 <View style={styles.loader}>
-                  <Text>Loading</Text>
+                  
                   <ActivityIndicator
                     animating={this.state.loading} />
                 </View>

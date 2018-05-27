@@ -100,9 +100,9 @@ class Detail extends Component {
     var listAmbient = ["Sport", "Youthful", "Luxurious", "Familiar"];
     var nAmbient = info.val().atmosphere - 1;
 
-    Geocoder.from(info.val().longitude, info.val().latitude)
+    Geocoder.from(info.val().latitude, info.val().longitude)
         .then(json => {
-        	var addressComponent = json.results[0].formatted_address ;
+        	var addressComponent = json.results[0].formatted_address;
             this.setState({add:addressComponent});
         })
         .catch(error => console.warn(error));
@@ -136,7 +136,7 @@ class Detail extends Component {
         </View>
 
         <View style={styles.barImage}>
-          <Image style={styles.img} source={require('../assets/bar1.jpg')}/>
+          <Image style={styles.img} source={{uri: info.val().url}}/>
         </View>
 
         <View style={{flexDirection: 'row'}}>
@@ -193,8 +193,8 @@ class Detail extends Component {
           <MapView
             style={{width:"100%", height:"100%"}}
             region={{
-              longitude: info.val().latitude,
-              latitude: info.val().longitude,
+              longitude: info.val().longitude,
+              latitude: info.val().latitude,
               latitudeDelta: 0.01,
               longitudeDelta: 0.01
             }}
@@ -202,8 +202,8 @@ class Detail extends Component {
             
             <MapView.Marker
               coordinate={{
-                longitude: info.val().latitude,
-                latitude: info.val().longitude,
+                longitude: info.val().longitude,
+                latitude: info.val().latitude,
               }}
 
               title={info.val().name}

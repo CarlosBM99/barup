@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, StatusBar, ListView, Image, TouchableOpacity, F
 import { Container, Content, Header, Form, Input, Item, Button, Label, Icon, List, ListItem, Card, CardItem, Thumbnail, Body, Left, Right} from 'native-base'
 import RF from "react-native-responsive-fontsize";
 import { Rating } from 'react-native-elements';
+import Geocoder from 'react-native-geocoding';
 
 var {height, width} = Dimensions.get('window');
 const {
@@ -69,8 +70,10 @@ class listBars extends Component {
       refreshing: false,
       loaging: false,
       firstKnownKey: null,
+      add:"null",
     }
   }
+
   static navigationOptions = { 
     headerTitle: "BarUp", 
     headerTintColor:"#fed849", 
@@ -163,7 +166,7 @@ class listBars extends Component {
   }
   
   componentDidMount() {
-      this.makeRemoteRequest() 
+      this.makeRemoteRequest();
   }
 
   handleLoadMore = () => {
@@ -184,16 +187,30 @@ class listBars extends Component {
       return beerImages[2]      
     }
   }
+
+  getAddress(item,add){
+      Geocoder.from(item.val().latitude, item.val().longitude)
+          .then(json => {
+            add = json.results[0].address_components[1].long_name;
+            return(add);
+          })
+          .catch(error => console.warn(error));
+  }
+
   renderItem = ({ item }) => {
     var listAmbient = ["Sport", "Youthful", "Luxurious", "Familiar"];
-    var nAmbient = item.val().atmosphere - 1;
+    var nAmbient = item.val().atmosphere - 1; 
+
+    var add = null;
+    {this.getAddress(item,add)}
+
     return (
       <TouchableHighlight onPress={() => this.goToNextScreen(item)}>
         <View style={[{ width: (width) }, { height: (height) / 4 }, { marginBottom: 0 }, { paddingVertical: 0 }]}>
           <Card style={styles.card}>
             <View style={styles.first}>
               <View style={styles.barFoto}>
-                <Image style={styles.imgBar} source={{uri:"https://firebasestorage.googleapis.com/v0/b/barup-ca0f9.appspot.com/o/images%2Fbar2.jpg?alt=media&token=bc93eb25-83e3-4ad1-8e09-a586d33a8fc1"}}/>
+                <Image style={styles.imgBar} source={{uri:item.val().url}}/>
               </View>
               <View style={styles.barStyle}>
                 <Text style={{fontSize:RF(3.3),color:'black'}}>{listAmbient[nAmbient]}</Text>
@@ -209,7 +226,7 @@ class listBars extends Component {
                 <Text style={{fontSize:RF(3)}}>{item.val().name}</Text>                
               </View>
               <View style={styles.location}>
-                <Text style={{fontSize:RF(2.5)}}>Marina</Text>                
+                <Text style={{fontSize:RF(2.5)}}>{add}</Text>                
               </View>
               <View style={styles.rating}>
                 <Rating
