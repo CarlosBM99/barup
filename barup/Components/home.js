@@ -63,6 +63,8 @@ const initialState = {
   st: 0,
   places: false,
   showToast: false,
+  lon: 0,
+  lat: 0
 }
 class Home extends React.Component {
   constructor(props) {
@@ -81,8 +83,8 @@ class Home extends React.Component {
       },
       atmosphere: this.state.sport ? 0 : this.state.youthful ? 1 : this.state.luxurious ? 2 : this.state.familiar ? 3 : -1,
       location: {
-        latitude: 1,
-        longitude: 1
+        latitude: 0,
+        longitude: 0
       }
     }
   }
@@ -100,8 +102,8 @@ class Home extends React.Component {
       },
       atmosphere: this.state.sport ? 0 : this.state.youthful ? 1 : this.state.luxurious ? 2 : this.state.familiar ? 3 : -1,
       location: {
-        latitude: 1,
-        longitude: 1
+        latitude: this.state.lon,
+        longitude: this.state.lat
       }
     })
   }
@@ -149,6 +151,7 @@ class Home extends React.Component {
     headerBackTitle: null,
   }
   async a(props,params){
+    params = this.getParams() 
     if(params.location.latitude === 0 || params.location.longitude === 0){
       Toast.show({
         text: 'You have to specify the location',
@@ -158,8 +161,7 @@ class Home extends React.Component {
       this.setState({
         loading: true
       });
-      var key = firebase.database().ref('/status_search').push().key
-      params = this.getParams()      
+      var key = firebase.database().ref('/status_search').push().key     
       console.log(params)
       firebase.database().ref('/status_search').child(key).set({ id: key, it: params, state: 1 })
       fetch('https://d93d62eb.ngrok.io/barup/results.php?name='+key+'&run=true');
@@ -209,61 +211,100 @@ class Home extends React.Component {
     firebase.database().ref('/bars').child(key).set(object)
   }
   Places(){
-    
+    var location = {
+      lat: 0,
+      lon: 0
+    }
     return (
-      <View style={styles.box3}>
-        <GooglePlacesAutocomplete
-          placeholder='Search'
-          minLength={2} // minimum length of text to search
-          autoFocus={false}
-          returnKeyType={'search'} // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype
-          listViewDisplayed='auto'    // true/false/undefined
-          fetchDetails={true}
-          renderDescription={row => row.description} // custom description render
-          onPress={(data, details = null) => { // 'details' is provided when fetchDetails = true
-            console.log(data, details);
-          }}
+      <View style={styles.container}>
+        <View style={styles.placesView}>
+          <GooglePlacesAutocomplete
+            placeholder='Search'
+            minLength={2} // minimum length of text to search
+            autoFocus={false}
+            returnKeyType={'search'} // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype
+            listViewDisplayed='auto'    // true/false/undefined
+            fetchDetails={true}
+            renderDescription={row => row.description } // custom description render
+            onPress={(data,details) => { // 'details' is provided when fetchDetails = true
+              if(details === 'CurrentLocation'){
+                location.lat = data.geometry.location.lat
+                location.lon = data.geometry.location.lng
+                console.log(location)
+              } else {
+                location.lat = details.geometry.location.lat
+                location.lon = details.geometry.location.lng
+                console.log(location)
+              }
+              
+              //location.lat = data.geometry.location.lat
+              //location.lon = data.geometry.location.lng
+              //console.log("AAAA: ",location.lat, "EEEEE: ", location)
+            }}
+            textInputProps={{
+            }}
+
+            getDefaultValue={() => ''} 
+        
+            query={{
+              // available options: https://developers.google.com/places/web-service/autocomplete
+              key: 'AIzaSyAWOG03GylQLc2J8fKA_v5rVjRW1KlRPU8',
+              language: 'en', // language of the results
+            }}
+            
+            styles={{
+              textInputContainer: {
+                width: '100%'
+              },
+              description: {
+                fontWeight: 'bold'
+              },
+              predefinedPlacesDescription: {
+                color: '#1faadb'
+              }
+            }}
+            //nearbySearchAPI={'GooglePlacesSearch'}
+            currentLocation={true} // Will add a 'Current location' button at the top of the predefined places list
+            currentLocationLabel="Current location"
+            nearbyPlacesAPI='None' // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
+            GoogleReverseGeocodingQuery={{
+              // available options for GoogleReverseGeocoding API : https://developers.google.com/maps/documentation/geocoding/intro
+            }}
+            GooglePlacesSearchQuery={{
+              // available options for GooglePlacesSearch API : https://developers.google.com/places/web-service/search
+              rankby: 'distance',
+              types: 'food'
+            }}
+            
+            filterReverseGeocodingByTypes={['locality', 'administrative_area_level_3']} // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
+            //predefinedPlaces={[homePlace, workPlace]}
+      
+            debounce={200} // debounce the requests in ms. Set to 0 to remove debounce. By default 0ms.
+            //renderLeftButton={()  => <Icon name="arrow-back" style={{fontSize:30}}onPress={() => { this.setState({places: false})}}/>}
+            //renderRightButton={() => <Icon name="ios-star"/>}
+          /> 
+        </View>
           
-          getDefaultValue={() => ''}
-          
-          query={{
-            // available options: https://developers.google.com/places/web-service/autocomplete
-            key: 'AIzaSyAWOG03GylQLc2J8fKA_v5rVjRW1KlRPU8',
-            language: 'en', // language of the results
-          }}
-          
-          styles={{
-            textInputContainer: {
-              width: '100%'
-            },
-            description: {
-              fontWeight: 'bold'
-            },
-            predefinedPlacesDescription: {
-              color: '#1faadb'
-            }
-          }}
-          
-          currentLocation={true} // Will add a 'Current location' button at the top of the predefined places list
-          currentLocationLabel="Current location"
-          nearbyPlacesAPI='GooglePlacesSearch' // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
-          GoogleReverseGeocodingQuery={{
-            // available options for GoogleReverseGeocoding API : https://developers.google.com/maps/documentation/geocoding/intro
-          }}
-          GooglePlacesSearchQuery={{
-            // available options for GooglePlacesSearch API : https://developers.google.com/places/web-service/search
-            rankby: 'distance',
-            types: 'food'
-          }}
-    
-          filterReverseGeocodingByTypes={['locality', 'administrative_area_level_3']} // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
-          predefinedPlaces={[homePlace, workPlace]}
-    
-          debounce={200} // debounce the requests in ms. Set to 0 to remove debounce. By default 0ms.
-          renderLeftButton={()  => <Icon name="arrow-back" style={{fontSize:30}}onPress={() => { this.setState({places: false})}}/>}
-          renderRightButton={() => <Icon name="ios-star"/>}
-        /> 
-      </View>
+        <View style={styles.utilView}>
+          <TouchableOpacity style={{height:'100%', width: '49.5%', justifyContent: 'center', alignItems: 'center', backgroundColor: 'grey'}} 
+                            onPress={() => { this.setState({places: false})}}>
+            <View >
+              <Text style={{fontSize:RF(3.5),color: 'white'}}>Cancel</Text>
+            </View>
+          </TouchableOpacity>
+          <View style={{height:'100%', width: '1%', backgroundColor:'black'}}>
+            
+          </View>
+          <TouchableOpacity style={{height:'100%', width: '49.5%', justifyContent: 'center', alignItems: 'center', backgroundColor: 'grey'}} 
+                            onPress={() => { this.setState({lon: location.lon,
+                                                            lat: location.lat,
+                                                            places: false})}}>
+            <View >
+                <Text style={{fontSize:RF(3.5),color: 'white'}}>Apply</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+      </View>   
     )
     
   }
@@ -305,7 +346,7 @@ class Home extends React.Component {
           <Item style={{backgroundColor:'white', paddingHorizontal: 10, borderRadius:10}}
                 onPress = { () => {this.setState({places: true})}}>
               <Icon name="search" style={{fontSize: 30, paddingTop: 5}}/>
-              <Text>Search for your city</Text>
+              <Text>Search for your location</Text>
               {/* <Icon name="locate" style={{fontSize: 30, paddingTop: 5}}/> */}  
           </Item>
         </View>
@@ -606,7 +647,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignSelf: 'center',
   },
+  placesView: {
+    width: '100%',
+    height: '88%'
+  },
+  utilView: {
+    width: '100%',
+    height: '12%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection:'row',
+  }
 
-  
-  
 });
