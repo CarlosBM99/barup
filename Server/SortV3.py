@@ -198,9 +198,11 @@ for test in bList:
 ###SECTION 3:sort with gradient criteria, mergesort in parallel ###	prices, rating, crowdedness
 temp = list(all_bar[5:10])
 print(len(temp))
-temp = Sort(temp, "beerPrice")
+
+all_bar = Sort(all_bar, "beerPrice")
+
 print(len(temp))
-for index in temp:
+for index in all_bar:
 	print(index["beerPrice"])
 	
 
@@ -220,8 +222,8 @@ for index in range(0, len(keys)):
 							"id": bList[index].id,"location": bList[index].location,
 							"name": bList[index].name,"rating": bList[index].rating}
 '''							
-db.child("results").child("-LDTUfnsyoRn2-532OBG").set(temp)#change later to key
+db.child("results").child("test_eric").set(all_bar)#change later to key
 
-time.sleep(10)
+time.sleep(30)
 
-db.child("results").child("-LDTUfnsyoRn2-532OBG").remove()#change later to key
+#db.child("results").child("-LDTUfnsyoRn2-532OBG").remove()#change later to key
