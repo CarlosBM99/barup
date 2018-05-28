@@ -97,7 +97,6 @@ def Sort(list,criteria):
 		print ('Final merge duration : ', final_merge_time)
 		multi_core_time = time.time() - start_time
 		print ('%d-Core ended: %4.6f sec'%(cores, multi_core_time))
-		print(a)
 		return a
 		
 # a wrapper function which appends the result of "merge_sort" to the "responses" list
@@ -221,7 +220,7 @@ for index in range(0, len(keys)):
 							"id": bList[index].id,"location": bList[index].location,
 							"name": bList[index].name,"rating": bList[index].rating}
 '''							
-db.child("results").child("-LDTUfnsyoRn2-532OBG").set(all_bar)#change later to key
+db.child("results").child("-LDTUfnsyoRn2-532OBG").set(temp)#change later to key
 
 time.sleep(10)
 
