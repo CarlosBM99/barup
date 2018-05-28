@@ -70,7 +70,7 @@ class listBars extends Component {
       refreshing: false,
       loaging: false,
       firstKnownKey: null,
-      add:"null",
+      key: null
     }
   }
 
@@ -131,12 +131,13 @@ class listBars extends Component {
       <Image source={barImages[barID]} style={styles.imag}/>
     );
   }
-  makeRemoteRequest = () => {
+  makeRemoteRequest = (key) => {
     var that = this
+    console.log(key)
     that.setState({loading: true})
     //console.log(that.state.firstKnownKey)    
     var newData = [...that.state.listViewData]
-    var ref = firebase.database().ref('/bars')
+    var ref = firebase.database().ref('/results/'+key)
     ref.orderByKey().limitToFirst(6).on('child_added', function(childSnapshot, prevChildKey) {
       //console.log(childSnapshot.val())
       that.state.firstKnownKey = childSnapshot.key;
@@ -145,13 +146,13 @@ class listBars extends Component {
     },
     that.setState({ listViewData: newData, refreshing: false, loading: false}));
   }
-  makeRemoteRequest2 = () => {
+  makeRemoteRequest2 = (key) => {
     var that = this
     that.setState({loading: true})
     //console.log(that.state.firstKnownKey) 
     var f = that.state.firstKnownKey   
     var newData = [...that.state.listViewData]
-    var ref = firebase.database().ref('/bars')
+    var ref = firebase.database().ref('/results/'+key)
     ref.orderByKey().startAt(that.state.firstKnownKey).limitToFirst(7).on('child_added', function(childSnapshot, prevChildKey) {
       that.state.firstKnownKey = childSnapshot.key;
       if(f !== that.state.firstKnownKey){
@@ -162,19 +163,23 @@ class listBars extends Component {
       }
     },
     that.setState({ listViewData: newData, refreshing: false, loading: false}));
-    console.log(this.state.refreshing)
+    //console.log(this.state.refreshing)
   }
   
   componentDidMount() {
-      this.makeRemoteRequest();
+      const { navigation } = this.props;
+      const key = navigation.getParam('key', 'NO-ID');
+      this.makeRemoteRequest(key);
   }
 
   handleLoadMore = () => {
+    const { navigation } = this.props;
+    const key = navigation.getParam('key', 'NO-ID');
     var that = this 
     that.setState({
       refreshing: true
     }, () => {
-      setTimeout(function(){that.makeRemoteRequest2()},2000)
+      setTimeout(function(){that.makeRemoteRequest2(key)},2000)
     })
   }
 
@@ -188,21 +193,9 @@ class listBars extends Component {
     }
   }
 
-  getAddress(item,add){
-      Geocoder.from(item.val().latitude, item.val().longitude)
-          .then(json => {
-            add = json.results[0].address_components[1].long_name;
-            return(add);
-          })
-          .catch(error => console.warn(error));
-  }
-
   renderItem = ({ item }) => {
     var listAmbient = ["Sport", "Youthful", "Luxurious", "Familiar"];
     var nAmbient = item.val().atmosphere - 1; 
-
-    var add = null;
-    {this.getAddress(item,add)}
 
     return (
       <TouchableHighlight onPress={() => this.goToNextScreen(item)}>
@@ -226,7 +219,7 @@ class listBars extends Component {
                 <Text style={{fontSize:RF(3)}}>{item.val().name}</Text>                
               </View>
               <View style={styles.location}>
-                <Text style={{fontSize:RF(2.5)}}>{add}</Text>                
+                <Text style={{fontSize:RF(2.5)}}>Marina</Text>                
               </View>
               <View style={styles.rating}>
                 <Rating

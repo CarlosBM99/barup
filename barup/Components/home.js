@@ -77,7 +77,7 @@ class Home extends React.Component {
         table_football: this.state.showFootball ? 1: 0
       },
       order: {
-        beer_prace: this.state.beerPrice ? 1: 0,
+        beer_price: this.state.beerPrice ? 1: 0,
         crowdness: this.state.crowdness ? 1: 0,
         rating: this.state.rating ? 1: 0
       },
@@ -163,8 +163,8 @@ class Home extends React.Component {
       });
       var key = firebase.database().ref('/status_search').push().key     
       console.log(params)
-      firebase.database().ref('/status_search').child(key).set({ id: key, it: params, state: 1 })
-      fetch('https://d93d62eb.ngrok.io/barup/results.php?name='+key+'&run=true');
+      firebase.database().ref('/status_search').child(key).set({ id: key, it: params, state: 0 })
+      fetch('https://e6231483.ngrok.io/barup/results.php?name='+key+'&run=true');
       var that = this
       var int = setInterval(() => {
         var ref = firebase.database().ref('/status_search/')
@@ -178,9 +178,10 @@ class Home extends React.Component {
           }
           });
           if(this.state.st === 1){
-            props.navigation.navigate('listBars')
+            
+            props.navigation.navigate('listBars',{key: key})
             that.setState(initialState) 
-            firebase.database().ref('status_search/' + key).set(null)
+            //firebase.database().ref('status_search/' + key).set(null)
             clearInterval(int);
           }
         
