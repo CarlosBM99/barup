@@ -96,7 +96,7 @@ class Home extends React.Component {
         table_football: this.state.showFootball ? 1: 0
       },
       order: {
-        beer_prace: this.state.beerPrice ? 1: 0,
+        beer_price: this.state.beerPrice ? 1: 0,
         crowdness: this.state.crowdness ? 1: 0,
         rating: this.state.rating ? 1: 0
       },
