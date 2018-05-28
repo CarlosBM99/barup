@@ -27,11 +27,9 @@ def styleFilter(cmp, bars):
 		if bars[index]["atmosphere"] != cmp:
 			del bars[index]
 			
-def Sort(list,criteria, start, end):
+def Sort(list,criteria):
 	
-	l = end - start
-	if start == 0:
-		l = l+1
+	l = len(list)
     
 	print ('List length : ', l)
 
@@ -63,10 +61,10 @@ def Sort(list,criteria, start, end):
 			''' we create a new Process object and assign the "merge_sort_multi" function to it,
 			using as input a sublist '''
 			if n < cores - 1:
-				proc = Process( target=merge_sort_multi, args=( all_bar[n*step:(n+1)*step],criteria ) )
+				proc = Process( target=merge_sort_multi, args=( list[n*step:(n+1)*step],criteria ) )
 			else:
 				# get the remaining elements in the list
-				proc = Process( target=merge_sort_multi, args=( all_bar[n*step:],criteria ) )
+				proc = Process( target=merge_sort_multi, args=( list[n*step:],criteria ) )
 			p.append(proc)
 
 		''' http://docs.python.org/library/multiprocessing.html#multiprocessing.Process.start & 
@@ -94,17 +92,12 @@ def Sort(list,criteria, start, end):
 				proc.join()
 		# finally we have 2 sublists which need to be merged 
 		a = merge(responses[0], responses[1], criteria)
-		# ... anddd time!
+		
 		final_merge_time = time.time() - start_time_final_merge
 		print ('Final merge duration : ', final_merge_time)
 		multi_core_time = time.time() - start_time
-		# of course we double-check that we did everything right
-		#print ('Sorted arrays equal : ', (a == single))
 		print ('%d-Core ended: %4.6f sec'%(cores, multi_core_time))
-		# we write down the results in our log file
-		#f.write("%d %4.3f %4.3f %4.2f %4.3f\n"%(l, single_core_time, multi_core_time,\  
-		#multi_core_time/single_core_time, final_merge_time))
-		#f.close()
+		print(a)
 		return a
 		
 # a wrapper function which appends the result of "merge_sort" to the "responses" list
@@ -204,10 +197,12 @@ for test in bList:
 	
 '''
 ###SECTION 3:sort with gradient criteria, mergesort in parallel ###	prices, rating, crowdedness
-
-all_bar = Sort(all_bar, "beerPrice",0,len(all_bar)-1)
-for index in all_bar:
-			print(index["beerPrice"])
+temp = list(all_bar[5:10])
+print(len(temp))
+temp = Sort(temp, "beerPrice")
+print(len(temp))
+for index in temp:
+	print(index["beerPrice"])
 	
 
 
