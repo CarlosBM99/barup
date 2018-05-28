@@ -156,7 +156,7 @@ responses = manager.list()
 all_bar = db.child("bars").get().val()
 keys = list(all_bar)
 
-sortInfo = db.child("status_search").child("-LDTUfnsyoRn2-532OBG").get().val()#child(id gotten from app)
+sortInfo = db.child("status_search").child(sys.argv[1]).get().val()#child(id gotten from app)
 if all_bar[0] == None:
 	del all_bar[0]
 #print(all_bar[1]["id"])
@@ -195,11 +195,12 @@ for test in bList:
 	print(test.beer)
 	
 '''
+
 ###SECTION 3:sort with gradient criteria, mergesort in parallel ###	prices, rating, crowdedness
 temp = list(all_bar[5:10])
 print(len(temp))
 
-all_bar = Sort(all_bar, "beerPrice")
+all_bar = Sort(all_bar, "beerPrice")sys.argv[1]
 
 print(len(temp))
 for index in all_bar:
@@ -222,8 +223,8 @@ for index in range(0, len(keys)):
 							"id": bList[index].id,"location": bList[index].location,
 							"name": bList[index].name,"rating": bList[index].rating}
 '''							
-db.child("results").child("test_eric").set(all_bar)#change later to key
+db.child("results").child(sys.argv[1]).set(all_bar)#change later to key
 
 time.sleep(30)
 
-#db.child("results").child("-LDTUfnsyoRn2-532OBG").remove()#change later to key
+db.child("results").child(sys.argv[1]).remove()#change later to key
