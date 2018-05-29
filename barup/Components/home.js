@@ -102,8 +102,8 @@ class Home extends React.Component {
       },
       atmosphere: this.state.sport ? 0 : this.state.youthful ? 1 : this.state.luxurious ? 2 : this.state.familiar ? 3 : -1,
       location: {
-        latitude: this.state.lon,
-        longitude: this.state.lat
+        latitude: this.state.lat,
+        longitude: this.state.lon
       }
     })
   }
@@ -180,9 +180,8 @@ class Home extends React.Component {
           if(this.state.st === 1){
             that.setState(initialState)
             props.navigation.navigate('listBars',{key: key})
+            //firebase.database().ref('status_search/' + key).set(null)
             key = null 
-            
-            firebase.database().ref('status_search/' + key).set(null)
             clearInterval(int);
           }
         
