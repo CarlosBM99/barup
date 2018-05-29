@@ -133,18 +133,18 @@ responses = manager.list()
 if len(sys.argv) > 1: 
 	key = sys.argv[1]
 else:
-	key = "-LDTUfnsyoRn2-532OBG"
+	key = "-LDTUfnsyoRn2-532OBG" #testing purposes
 
 
 all_bar = db.child("bars").get().val()
 
 
-sortInfo = db.child("status_search").child(key).get().val()#child(id gotten from app)
+sortInfo = db.child("status_search").child(key).get().val()
 if all_bar[0] == None:
 	del all_bar[0]
 #print(all_bar[1]["id"])
 
-#filters commented for now, vut in working order
+
 
 if sortInfo["it"]["badgets"]["billards"] == 1:
 	badgeFilter("billards",all_bar)
@@ -154,11 +154,13 @@ if sortInfo["it"]["badgets"]["table_football"] == 1:
 	badgeFilter("football",all_bar)
 #crowdedness
 	
-if sortInfo["it"]["atmosphere"] != 0:
+if sortInfo["it"]["atmosphere"] != -1:
 	styleFilter(sortInfo["it"]["atmosphere"],all_bar)
-print(all_bar)
+#print(sortInfo["it"]["atmosphere"])
 
-
+for index in all_bar:
+	print(index["atmosphere"])
+	
 
 
 ###SECTION 2:sort with gradient criteria, mergesort in parallel ###	prices, rating, crowdedness
@@ -167,21 +169,19 @@ print(all_bar)
 
 if sortInfo["it"]["order"]["beer_price"] == 1:
 	all_bar = Sort(all_bar, "beerPrice")
-elif sortInfo["it"]["order"]["crowdness"] == 1:
+if sortInfo["it"]["order"]["crowdness"] == 1:
 	all_bar = Sort(all_bar, "prediction")
 elif sortInfo["it"]["order"]["rating"] == 1:
 	all_bar = Sort(all_bar, "rating")
 
 
 
-for index in all_bar:
-	print(index["beerPrice"])
-	
+
 
 
 ###SECTION 3:upload to result and tick off the confirmation flag ###
 					
-db.child("results").child(key).set(all_bar)#change later to key
+db.child("results").child(key).set(all_bar)
 
 time.sleep(2)
 
@@ -189,4 +189,4 @@ db.child("status_search").child(key).update({"state": 1})
 
 #time.sleep(30)
 
-#db.child("results").child(key).remove()#change later to key
+#db.child("results").child(key).remove()
