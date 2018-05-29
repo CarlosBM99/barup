@@ -129,17 +129,20 @@ db = firebase.database()
 ###SECTION 1:sort with binary criteria badges and style ###
 manager = Manager() 
 responses = manager.list()
+all_bar = db.child("bars").get().val()
 
 if len(sys.argv) > 1: 
 	key = sys.argv[1]
 else:
-	key = "-LDTUfnsyoRn2-532OBG" #testing purposes
+	db.child("results").push(all_bar)
+	sys.exit()
 
 
-all_bar = db.child("bars").get().val()
+
 
 
 sortInfo = db.child("status_search").child(key).get().val()
+
 if all_bar[0] == None:
 	del all_bar[0]
 #print(all_bar[1]["id"])
@@ -147,7 +150,7 @@ if all_bar[0] == None:
 
 
 if sortInfo["it"]["badgets"]["billards"] == 1:
-	badgeFilter("billards",all_bar)
+	badgeFilter("billiards",all_bar)
 if sortInfo["it"]["badgets"]["darts"] == 1:
 	badgeFilter("darts",all_bar)
 if sortInfo["it"]["badgets"]["table_football"] == 1:
@@ -175,8 +178,8 @@ elif sortInfo["it"]["order"]["rating"] == 1:
 	all_bar = Sort(all_bar, "rating")
 
 
-
-
+for index in all_bar:
+	print(index["rating"])
 
 
 ###SECTION 3:upload to result and tick off the confirmation flag ###
