@@ -139,8 +139,8 @@ class listBars extends Component {
     that.setState({loading: true})
     //console.log(that.state.firstKnownKey)    
     var newData = [...that.state.listViewData]
-    //var ref = firebase.database().ref('/results/'+key)
-    var ref = firebase.database().ref('/bars')
+    var ref = firebase.database().ref('/results/'+key)
+    //var ref = firebase.database().ref('/bars')
     ref.orderByKey().limitToFirst(6).on('child_added', function(childSnapshot, prevChildKey) {
       //console.log(childSnapshot.val())
       that.state.firstKnownKey = childSnapshot.key;
@@ -155,8 +155,8 @@ class listBars extends Component {
     //console.log(that.state.firstKnownKey) 
     var f = that.state.firstKnownKey   
     var newData = [...that.state.listViewData]
-    var ref = firebase.database().ref('/bars')
-    //var ref = firebase.database().ref('/results/'+key)
+    //var ref = firebase.database().ref('/bars')
+    var ref = firebase.database().ref('/results/'+key)
     ref.orderByKey().startAt(that.state.firstKnownKey).limitToFirst(7).on('child_added', function(childSnapshot, prevChildKey) {
       that.state.firstKnownKey = childSnapshot.key;
       if(f !== that.state.firstKnownKey){
