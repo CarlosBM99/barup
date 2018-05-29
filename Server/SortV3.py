@@ -183,7 +183,7 @@ for index in all_bar:
 					
 #db.child("results").child(key).set(all_bar)#change later to key
 
-#db.child("status_search").child(key).update({"state": 0})
+#db.child("status_search").child(key).update({"state": 1})
 
 #time.sleep(30)
 
