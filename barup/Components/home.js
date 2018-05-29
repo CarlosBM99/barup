@@ -162,7 +162,7 @@ class Home extends React.Component {
         loading: true
       });
       var key = firebase.database().ref('/status_search').push().key     
-      console.log(params)
+      //console.log(params)
       firebase.database().ref('/status_search').child(key).set({ id: key, it: params, state: 0 })
       fetch('https://c2d8b880.ngrok.io/barup/results.php?name='+key+'&run=true');
       var that = this
@@ -178,10 +178,11 @@ class Home extends React.Component {
           }
           });
           if(this.state.st === 1){
-            
+            that.setState(initialState)
             props.navigation.navigate('listBars',{key: key})
-            that.setState(initialState) 
-            //firebase.database().ref('status_search/' + key).set(null)
+            key = null 
+            
+            firebase.database().ref('status_search/' + key).set(null)
             clearInterval(int);
           }
         
@@ -231,11 +232,11 @@ class Home extends React.Component {
               if(details === 'CurrentLocation'){
                 location.lat = data.geometry.location.lat
                 location.lon = data.geometry.location.lng
-                console.log(location)
+                //console.log(location)
               } else {
                 location.lat = details.geometry.location.lat
                 location.lon = details.geometry.location.lng
-                console.log(location)
+                //console.log(location)
               }
               
               //location.lat = data.geometry.location.lat

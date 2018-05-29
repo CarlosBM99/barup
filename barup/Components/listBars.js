@@ -56,7 +56,14 @@ beerImages = [
   require('../assets/beer/beer2.png'),
   require('../assets/beer/beer3.png'),
 ]
-
+const initialState = {
+  listViewData: data,
+  refreshing: false,
+  loaging: false,
+  firstKnownKey: null,
+  key: null,
+  count: 0
+}
 const numColumns = 3;
 class listBars extends Component {
   
@@ -65,14 +72,7 @@ class listBars extends Component {
     
     this.ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
 
-    this.state = {
-      listViewData: data,
-      refreshing: false,
-      loaging: false,
-      firstKnownKey: null,
-      key: null,
-      count: 0
-    }
+    this.state = initialState
   }
 
   static navigationOptions = { 
@@ -85,7 +85,7 @@ class listBars extends Component {
       paddingLeft: 5, 
       backgroundColor: 'black'
     },
-    headerBackTitle: null,
+    headerBackTitle: null,  
   }
 
   goToNextScreen(item){
@@ -133,12 +133,14 @@ class listBars extends Component {
     );
   }
   makeRemoteRequest = (key) => {
+    this.setState(initialState)
     var that = this
     console.log(key)
     that.setState({loading: true})
     //console.log(that.state.firstKnownKey)    
     var newData = [...that.state.listViewData]
-    var ref = firebase.database().ref('/results/'+key)
+    //var ref = firebase.database().ref('/results/'+key)
+    var ref = firebase.database().ref('/bars')
     ref.orderByKey().limitToFirst(6).on('child_added', function(childSnapshot, prevChildKey) {
       //console.log(childSnapshot.val())
       that.state.firstKnownKey = childSnapshot.key;
@@ -153,7 +155,8 @@ class listBars extends Component {
     //console.log(that.state.firstKnownKey) 
     var f = that.state.firstKnownKey   
     var newData = [...that.state.listViewData]
-    var ref = firebase.database().ref('/results/'+key)
+    var ref = firebase.database().ref('/bars')
+    //var ref = firebase.database().ref('/results/'+key)
     ref.orderByKey().startAt(that.state.firstKnownKey).limitToFirst(7).on('child_added', function(childSnapshot, prevChildKey) {
       that.state.firstKnownKey = childSnapshot.key;
       if(f !== that.state.firstKnownKey){
@@ -178,7 +181,7 @@ class listBars extends Component {
     const { navigation } = this.props;
     const key = navigation.getParam('key', 'NO-ID');
     var that = this
-    if(this.state.count > 2){
+    if(this.state.count < 2){
       that.setState({
         refreshing: true
       }, () => {
