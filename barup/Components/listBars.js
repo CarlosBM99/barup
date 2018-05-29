@@ -202,7 +202,7 @@ class listBars extends Component {
 
   renderItem = ({ item }) => {
     var listAmbient = ["Sport", "Youthful", "Luxurious", "Familiar"];
-    var nAmbient = item.val().atmosphere - 1; 
+    var nAmbient = item.val().atmosphere; 
 
     return (
       <TouchableHighlight onPress={() => this.goToNextScreen(item)}>
