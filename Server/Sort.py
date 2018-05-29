@@ -145,7 +145,7 @@ if all_bar[0] == None:
 #print(all_bar[1]["id"])
 
 #filters commented for now, vut in working order
-'''
+
 if sortInfo["it"]["badgets"]["billards"] == 1:
 	badgeFilter("billards",all_bar)
 if sortInfo["it"]["badgets"]["darts"] == 1:
@@ -159,7 +159,7 @@ if sortInfo["it"]["atmosphere"] != 0:
 print(all_bar)
 
 
-'''
+
 
 ###SECTION 2:sort with gradient criteria, mergesort in parallel ###	prices, rating, crowdedness
 
@@ -181,9 +181,11 @@ for index in all_bar:
 
 ###SECTION 3:upload to result and tick off the confirmation flag ###
 					
-#db.child("results").child(key).set(all_bar)#change later to key
+db.child("results").child(key).set(all_bar)#change later to key
 
-#db.child("status_search").child(key).update({"state": 1})
+time.sleep(2)
+
+db.child("status_search").child(key).update({"state": 1})
 
 #time.sleep(30)
 
