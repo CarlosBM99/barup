@@ -165,7 +165,7 @@ print(all_bar)
 
 #elif for now since multiple sorting isn't implemented yet
 
-if sortInfo["it"]["order"]["beer_prace"] == 1:
+if sortInfo["it"]["order"]["beer_price"] == 1:
 	all_bar = Sort(all_bar, "beerPrice")
 elif sortInfo["it"]["order"]["crowdness"] == 1:
 	all_bar = Sort(all_bar, "prediction")
@@ -183,7 +183,7 @@ for index in all_bar:
 					
 #db.child("results").child(key).set(all_bar)#change later to key
 
-#db.child("status_search").child(key).update({"state": 0})
+#db.child("status_search").child(key).update({"state": 1})
 
 #time.sleep(30)
 
