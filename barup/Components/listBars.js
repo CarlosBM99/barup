@@ -70,7 +70,8 @@ class listBars extends Component {
       refreshing: false,
       loaging: false,
       firstKnownKey: null,
-      key: null
+      key: null,
+      count: 0
     }
   }
 
@@ -159,7 +160,8 @@ class listBars extends Component {
         //console.log("CHILD: ", childSnapshot.key)
         newData.push(childSnapshot)
       } else {
-        that.setState({ listViewData: newData, refreshing: false, loading: false})
+        console.log(that.state.count)
+        that.setState({ listViewData: newData, refreshing: false, loading: false, count: that.state.count + 1})
       }
     },
     that.setState({ listViewData: newData, refreshing: false, loading: false}));
@@ -175,12 +177,14 @@ class listBars extends Component {
   handleLoadMore = () => {
     const { navigation } = this.props;
     const key = navigation.getParam('key', 'NO-ID');
-    var that = this 
-    that.setState({
-      refreshing: true
-    }, () => {
-      setTimeout(function(){that.makeRemoteRequest2(key)},2000)
-    })
+    var that = this
+    if(this.state.count > 2){
+      that.setState({
+        refreshing: true
+      }, () => {
+        setTimeout(function(){that.makeRemoteRequest2(key)},2000)
+      })
+    }
   }
 
   getCrowd(pred){
@@ -269,7 +273,7 @@ class listBars extends Component {
         refreshing={this.state.refreshing}
         //onRefresh={this.handleRefresh}
         onEndReached={this.handleLoadMore}
-        onEndReachedThreshold={0}
+        onEndReachedThreshold={5}
         ListFooterComponent={() => { // replaces renderFooter={() => {
           if(this.state.refreshing){
             return (
