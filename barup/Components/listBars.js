@@ -1,6 +1,26 @@
 import React, {Component} from 'react';
-import { StyleSheet, Text, View, StatusBar, ListView, Image,TouchableOpacity, FlatList, Dimensions, TouchableHighlight, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, StatusBar, ListView, Image, TouchableOpacity, FlatList, Dimensions, TouchableHighlight, ActivityIndicator, Platform, PixelRatio  } from 'react-native';
 import { Container, Content, Header, Form, Input, Item, Button, Label, Icon, List, ListItem, Card, CardItem, Thumbnail, Body, Left, Right} from 'native-base'
+import RF from "react-native-responsive-fontsize";
+import { Rating } from 'react-native-elements';
+import Geocoder from 'react-native-geocoding';
+
+var {height, width} = Dimensions.get('window');
+const {
+  width: SCREEN_WIDTH,
+  height: SCREEN_HEIGHT,
+} = Dimensions.get('window');
+
+// based on iphone 5s's scale
+const scale = SCREEN_WIDTH / 320;
+
+export function normalize(size) {
+  if (Platform.OS === 'ios') {
+    return Math.round(PixelRatio.roundToNearestPixel(size))
+  } else {
+    return Math.round(PixelRatio.roundToNearestPixel(size)) - 2
+  }
+}
 
 import * as firebase from 'firebase';
 // Initialize Firebase
@@ -31,7 +51,19 @@ barImages = [
   require('../assets/bar4.jpg'),
   require('../assets/bar5.jpg'),
 ]
-
+beerImages = [
+  require('../assets/beer/beer1.png'),
+  require('../assets/beer/beer2.png'),
+  require('../assets/beer/beer3.png'),
+]
+const initialState = {
+  listViewData: data,
+  refreshing: false,
+  loaging: false,
+  firstKnownKey: null,
+  key: null,
+  count: 0
+}
 const numColumns = 3;
 class listBars extends Component {
   
@@ -40,13 +72,9 @@ class listBars extends Component {
     
     this.ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
 
-    this.state = {
-      listViewData: data,
-      refreshing: false,
-      loaging: false,
-      firstKnownKey: null
-    }
+    this.state = initialState
   }
+
   static navigationOptions = { 
     headerTitle: "BarUp", 
     headerTintColor:"#fed849", 
@@ -57,7 +85,7 @@ class listBars extends Component {
       paddingLeft: 5, 
       backgroundColor: 'black'
     },
-    headerBackTitle: null,
+    headerBackTitle: null,  
   }
 
   goToNextScreen(item){
@@ -65,34 +93,34 @@ class listBars extends Component {
     return navigate('Detail',{ info: item});
   }
 
-  renderDartsBadge(item)  {
-    showDartBadge = item.val().darts;
-    var tempDartBadge = showDartBadge? dartBadge : emptyBadge;
+  renderDartsBadge(info)  {
+    showDartBadge = info.val().darts;
+    var tempDartBadge = showDartBadge? dartBadge : dartUnbadge;
     return (
       <Image
-        style={{height:34, width:34}} 
+        style={styles.bdg} 
         source={ tempDartBadge }
       />
     );
   }
 
-  renderFootballBadge(item)  {
-    showFootballBadge = item.val().football;
-    var tempFootballBadge = showFootballBadge? footballBadge : emptyBadge;
+  renderFootballBadge(info)  {
+    showFootballBadge = info.val().football;
+    var tempFootballBadge = showFootballBadge? footballBadge : footballUnbadge;
     return (
       <Image
-        style={{height:34, width:34}} 
+        style={styles.bdg} 
         source={ tempFootballBadge }
       />
     );
   }
 
-  renderBilliardsBadge(item)  {
-    showBilliardsBadge = item.val().billiards;
-    var tempBilliardsBadge = showBilliardsBadge? billiardsBadge : emptyBadge;
+  renderBilliardsBadge(info)  {
+    showBilliardsBadge = info.val().billiards;
+    var tempBilliardsBadge = showBilliardsBadge? billiardsBadge : billiardsUnbadge;
     return (
       <Image
-        style={{height:34, width:34}} 
+        style={styles.bdg} 
         source={ tempBilliardsBadge }
       />
     );
@@ -104,114 +132,151 @@ class listBars extends Component {
       <Image source={barImages[barID]} style={styles.imag}/>
     );
   }
-
-  renderItem = ({ item }) => {
-    //function to go to next screen
-    return (
-      //<View style={styles.item}>
-      <TouchableHighlight onPress={() => this.goToNextScreen(item)}>
-        <Card style={{flex:1}}>
-          <CardItem style={{marginBottom:-20}}>
-            {this.renderBarImage(item)}
-            <Body style={{paddingLeft: 10}}>
-              <Text style={{fontWeight:'bold', fontSize:17}}>{item.val().name}</Text>
-              <Text style={{marginTop: 10}}>{item.val().location}</Text>
-              <Item style={{marginTop: 10}}>
-                <Icon name="beer"/>
-                <Icon name="beer"/>
-                <Icon name="beer"/>
-                <Icon name="beer"/>
-              </Item>
-            </Body>
-            <Right style={{marginTop:-50}}>
-              <Icon style={{fontSize: 40, color: 'black'}} name="star"/>
-            </Right>
-          </CardItem>
-          <CardItem style={{flex:1,marginTop:0, height:45}}>
-            <View style={{flex:1,flexDirection:'row', justifyContent: 'center',
-        alignItems: 'center'}}>
-                <View style={{flexDirection:'row', marginHorizontal:"2%"}}>
-                  {this.renderDartsBadge(item)}
-                  {this.renderFootballBadge(item)}
-                  {this.renderBilliardsBadge(item)}
-                  </View>
-
-              <View style={{flex:1,flexDirection:'row', justifyContent: 'center',
-          alignItems: 'center', marginLeft:10}}>
-                <Text style={{marginLeft:10,fontSize:20}}> {item.val().beerPrice}€
-                </Text><Text style={{fontSize:13,marginRight:25,marginTop:10}}> /Beer</Text>
-              </View>
-              <View style={{flexDirection:'row', justifyContent: 'center',
-        alignItems: 'center'}}>
-                <Text style={{fontSize:20}}>
-                  {item.val().crowd}
-                </Text>
-                <Icon style={{marginLeft:5}} name="information-circle"/>
-              </View>
-            </View>
-          </CardItem>
-        </Card>
-      </TouchableHighlight>
-    );
-  };
-  makeRemoteRequest = () => {
+  makeRemoteRequest = (key) => {
+    this.setState(initialState)
     var that = this
+    console.log(key)
     that.setState({loading: true})
     //console.log(that.state.firstKnownKey)    
     var newData = [...that.state.listViewData]
-    var ref = firebase.database().ref('/bars')
-    ref.orderByKey().limitToFirst(4).on('child_added', function(childSnapshot, prevChildKey) {
+    var ref = firebase.database().ref('/results/'+key)
+    //var ref = firebase.database().ref('/bars')
+    ref.orderByKey().limitToFirst(6).on('child_added', function(childSnapshot, prevChildKey) {
       //console.log(childSnapshot.val())
       that.state.firstKnownKey = childSnapshot.key;
-      console.log("KEY:",that.state.firstKnownKey)
+      //console.log("KEY:",that.state.firstKnownKey)
       newData.push(childSnapshot)
     },
     that.setState({ listViewData: newData, refreshing: false, loading: false}));
   }
-  makeRemoteRequest2 = () => {
+  makeRemoteRequest2 = (key) => {
     var that = this
     that.setState({loading: true})
     //console.log(that.state.firstKnownKey) 
     var f = that.state.firstKnownKey   
     var newData = [...that.state.listViewData]
-    var ref = firebase.database().ref('/bars')
-    ref.orderByKey().startAt(that.state.firstKnownKey).limitToFirst(5).on('child_added', function(childSnapshot, prevChildKey) {
+    //var ref = firebase.database().ref('/bars')
+    var ref = firebase.database().ref('/results/'+key)
+    ref.orderByKey().startAt(that.state.firstKnownKey).limitToFirst(7).on('child_added', function(childSnapshot, prevChildKey) {
       that.state.firstKnownKey = childSnapshot.key;
       if(f !== that.state.firstKnownKey){
-        console.log("CHILD: ", childSnapshot.key)
+        //console.log("CHILD: ", childSnapshot.key)
         newData.push(childSnapshot)
       } else {
-        that.setState({ listViewData: newData, refreshing: false, loading: false})
+        console.log(that.state.count)
+        that.setState({ listViewData: newData, refreshing: false, loading: false, count: that.state.count + 1})
       }
     },
     that.setState({ listViewData: newData, refreshing: false, loading: false}));
-    console.log(this.state.refreshing)
+    //console.log(this.state.refreshing)
   }
   
   componentDidMount() {
-    var that = this
-    that.makeRemoteRequest()
+      const { navigation } = this.props;
+      const key = navigation.getParam('key', 'NO-ID');
+      this.makeRemoteRequest(key);
   }
 
   handleLoadMore = () => {
-    var that = this 
-    that.setState({
-      refreshing: true
-    }, () => {
-      setTimeout(function(){that.makeRemoteRequest2()},2000)
-    })
+    const { navigation } = this.props;
+    const key = navigation.getParam('key', 'NO-ID');
+    var that = this
+    if(this.state.count < 2){
+      that.setState({
+        refreshing: true
+      }, () => {
+        setTimeout(function(){that.makeRemoteRequest2(key)},2000)
+      })
+    }
   }
-  render() { 
+
+  getCrowd(pred){
+    if(pred === 0){
+      return beerImages[0]
+    } else if (pred === 1){
+      return beerImages[1]      
+    } else {
+      return beerImages[2]      
+    }
+  }
+
+  renderItem = ({ item }) => {
+    var listAmbient = ["Sport", "Youthful", "Luxurious", "Familiar"];
+    var nAmbient = item.val().atmosphere; 
+
     return (
+      <TouchableHighlight onPress={() => this.goToNextScreen(item)}>
+        <View style={[{ width: (width) }, { height: (height) / 4 }, { marginBottom: 0 }, { paddingVertical: 0 }]}>
+          <Card style={styles.card}>
+            <View style={styles.first}>
+              <View style={styles.barFoto}>
+                <Image style={styles.imgBar} source={{uri:item.val().url}}/>
+              </View>
+              <View style={styles.barStyle}>
+                <Text style={{fontSize:RF(3.3),color:'black'}}>{listAmbient[nAmbient]}</Text>
+              </View>
+              <View style={styles.barBadge}>
+                {this.renderDartsBadge(item)}
+                {this.renderFootballBadge(item)}
+                {this.renderBilliardsBadge(item)}
+              </View>
+            </View>
+            <View style={styles.second}>
+              <View style={styles.name}>
+                <Text style={{fontSize:RF(3)}}>{item.val().name}</Text>                
+              </View>
+              <View style={styles.location}>
+                <Text style={{fontSize:RF(2.5)}}>Marina</Text>                
+              </View>
+              <View style={styles.rating}>
+                <Rating
+                  fractions={1}
+                  startingValue={item.val().rating}
+                  readonly
+                  imageSize={25}
+                  onFinishRating={this.ratingCompleted}
+                  style={{backgroundColor:'#000'}} 
+                />               
+              </View>
+              <View style={styles.price}>
+                <Text style={{fontSize:RF(4)}}>{item.val().beerPrice}€
+                  <Text style={{fontSize:RF(3.1)}}>/Beer</Text> 
+                </Text> 
+                               
+                
+              </View>
+            </View>
+            <View style={styles.third}>
+              <View style={styles.fav}>
+                <Icon style={{fontSize:RF(6)}} name="ios-star"/>
+              </View >
+              <View style={styles.textCrowd}>
+                <Text style={{fontSize:RF(1.5)}}>Crowd level</Text>
+              </View >
+              <View style={styles.crowd}>
+                <Image style={styles.icobeer} source={this.getCrowd(item.val().prediction)}/>
+              </View >
+              
+            </View >
+          </Card>
+        </View> 
+      </TouchableHighlight>
+      
+    );
+  };
+  render() { 
+
+    return (
+      <View style={styles.container}>
       <FlatList
         backgroundColor="white"
         data={this.state.listViewData}
-        style={styles.container}
+        
         renderItem={this.renderItem}
         refreshing={this.state.refreshing}
         //onRefresh={this.handleRefresh}
         onEndReached={this.handleLoadMore}
-        onEndReachedThreshold={1}
+        onEndReachedThreshold={5}
         ListFooterComponent={() => { // replaces renderFooter={() => {
           if(this.state.refreshing){
             return (
@@ -225,6 +290,7 @@ class listBars extends Component {
           }
         }}
       />
+      </View>
     )
   }
 }
@@ -232,11 +298,10 @@ export default listBars;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    //marginVertical: 20,
+    flex: 1
   },
   item: {
-    backgroundColor: '#dce3ef',
+    backgroundColor: '#ded4d4',
     alignItems: 'center',
     justifyContent: 'center',
     flex: 1,
@@ -245,8 +310,12 @@ const styles = StyleSheet.create({
   },
   imag:{
     flex: 1,
-    height: 100, 
-    width: 100
+    height:100,
+    width:100,
+  },
+  listImg: {
+    width: '100%',
+    height: '70%',
   },
   itemInvisible: {
     backgroundColor: 'transparent',
@@ -254,4 +323,102 @@ const styles = StyleSheet.create({
   itemText: {
     color: 'black',
   },
+  card: {
+    flex: 1,
+    flexDirection: 'row',
+    backgroundColor: 'white'
+  },
+  first: {
+    width: "30%",
+    height: '100%',
+    
+  },
+  second: {
+    width: "50%",
+    height: '100%',   
+  },
+  third: {
+    width: "20%",
+    height: '100%',
+  },
+  barFoto:{
+    width: "100%",
+    height: '50%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  barStyle: {
+    width: "100%",
+    height: '20%',
+    backgroundColor: "orange",
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  barBadge: {
+    width: "100%",
+    height: '30%',
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  fav: {
+    width: "100%",
+    height: '30%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  textCrowd: {
+    width: "100%",
+    height: '10%',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+  },
+  crowd: {
+    width: "100%",
+    height: '60%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 7
+  },
+  icobeer: {
+    flex:1,
+    resizeMode: 'contain',
+  },
+  imgBar: {
+    flex: 1,
+    width: "100%",
+    height: '50%',
+    resizeMode: 'cover',
+  },
+  name: {
+    width: "100%",
+    height: '30%', 
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  location: {
+    width: "100%",
+    height: '15%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  rating: {
+    width: "100%",
+    height: '25%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  price: {
+    width: "100%",
+    height: '30%', 
+    alignItems: 'center',
+    justifyContent: 'center',
+    
+  },
+  bdg:{
+    flex:1,
+    resizeMode: 'contain',
+  }
+
 });
