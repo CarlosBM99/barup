@@ -15,5 +15,9 @@ for i in range (1,21):
 	address = place['formatted_address']
 	street = place['address_components'][1]['long_name']
 
+	data["bars"][i]["address"] = address
 	print(address)
 	print(street)
+
+	with open("data.json",'w') as outfile:
+		json.dump(data,outfile)
