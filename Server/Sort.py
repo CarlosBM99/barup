@@ -167,13 +167,32 @@ for index in all_bar:
 
 
 ###SECTION 2:sort with gradient criteria, mergesort in parallel ###	prices, rating, crowdedness
-
-#elif for now since multiple sorting isn't implemented yet
-
+'''
 if sortInfo["it"]["order"]["beer_price"] == 1:
 	all_bar = Sort(all_bar, "beerPrice")
 if sortInfo["it"]["order"]["crowdness"] == 1:
 	all_bar = Sort(all_bar, "prediction")
+elif sortInfo["it"]["order"]["rating"] == 1:
+	all_bar = Sort(all_bar, "rating")
+'''
+#multiple sort - not tested#
+if sortInfo["it"]["order"]["beer_price"] == 1:
+	if sortInfo["it"]["order"]["crowdness"] == 1:
+		if sortInfo["it"]["order"]["rating"] == 1:
+			all_bar = Sort(all_bar, "beerPrice_prediction_rating")
+		else:
+			all_bar = Sort(all_bar, "beerPrice_prediction")
+	if sortInfo["it"]["order"]["rating"] == 1:
+		all_bar = Sort(all_bar, "beerPrice_rating")
+	else:
+		all_bar = Sort(all_bar, "beerPrice")
+
+if sortInfo["it"]["order"]["crowdness"] == 1:
+	if sortInfo["it"]["order"]["rating"] == 1:
+		all_bar = Sort(all_bar, "prediction_rating")
+	else:
+		all_bar = Sort(all_bar, "prediction")
+
 elif sortInfo["it"]["order"]["rating"] == 1:
 	all_bar = Sort(all_bar, "rating")
 
