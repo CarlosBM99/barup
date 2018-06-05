@@ -22,9 +22,13 @@ def badgeFilter(str, bars):
 	#print(bars)
 			
 def styleFilter(cmp, bars):
-		
+	'''
 	for index in sorted(range(0,len(bars)),reverse=True):
 		if bars[index]["atmosphere"] != cmp:
+			del bars[index]
+	'''
+	for index in sorted(range(0,len(bars)),reverse=True):
+		if bars[index]["atmosphere"] == cmp:
 			del bars[index]
 			
 def Sort(list,criteria):
@@ -157,9 +161,22 @@ if sortInfo["it"]["badgets"]["table_football"] == 1:
 	badgeFilter("football",all_bar)
 #crowdedness
 	
+'''
 if sortInfo["it"]["atmosphere"] != -1:
 	styleFilter(sortInfo["it"]["atmosphere"],all_bar)
 #print(sortInfo["it"]["atmosphere"])
+'''
+if sortInfo["it"]["atmosphere"]["youthful"] == 0:
+	styleFilter(0,all_bar)
+if sortInfo["it"]["atmosphere"]["sport"] == 0:
+	styleFilter(1,all_bar)
+if sortInfo["it"]["atmosphere"]["luxurious"] == 0:
+	styleFilter(2,all_bar)
+if sortInfo["it"]["atmosphere"]["familiar"] == 0:
+	styleFilter(3,all_bar)
+
+for index in all_bar:
+	print(index["atmosphere"])
 
 for index in all_bar:
 	print(index["atmosphere"])
