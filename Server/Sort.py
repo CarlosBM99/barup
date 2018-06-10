@@ -100,7 +100,7 @@ def merge_sort(a, criteria):
   a_right = merge_sort(a_right, criteria)
   return merge(a_left, a_right, criteria)
 
-  
+'''
 def merge(left, right, criteria):
   a = []
   while len(left) > 0 or len(right) > 0:
@@ -116,6 +116,29 @@ def merge(left, right, criteria):
       a.extend(right)
       break
   return a
+'''
+def merge(left, right, criteria):
+  a = []
+  while len(left) > 0 or len(right) > 0:
+    if len(left) > 0 and len(right) > 0:
+      if left[0][criteria] >= right[0][criteria]:
+      	if criteria == "beerPrice":
+      		a.append(right.pop(0))
+      	else:
+        	a.append(left.pop(0))
+      else:
+      	if criteria == "beerPrice":
+      		a.append(left.pop(0))
+      	else:
+        	a.append(right.pop(0))
+    elif len(left) > 0:
+      a.extend(left)
+      break
+    elif len(right) > 0:
+      a.extend(right)
+      break
+  return a
+
 if __name__ == '__main__':
   try:
     cores = cpu_count() #get the number of cores
@@ -159,13 +182,8 @@ if sortInfo["it"]["badgets"]["darts"] == 1:
 	badgeFilter("darts",all_bar)
 if sortInfo["it"]["badgets"]["table_football"] == 1:
 	badgeFilter("football",all_bar)
-#crowdedness
 	
-'''
-if sortInfo["it"]["atmosphere"] != -1:
-	styleFilter(sortInfo["it"]["atmosphere"],all_bar)
-#print(sortInfo["it"]["atmosphere"])
-'''
+#Bar Type
 if sortInfo["it"]["atmosphere"]["youthful"] == 0:
 	styleFilter(0,all_bar)
 if sortInfo["it"]["atmosphere"]["sport"] == 0:
@@ -178,33 +196,21 @@ if sortInfo["it"]["atmosphere"]["familiar"] == 0:
 for index in all_bar:
 	print(index["atmosphere"])
 
-for index in all_bar:
-	print(index["atmosphere"])
-	
-
 
 ###SECTION 2:sort with gradient criteria, mergesort in parallel ###	prices, rating, crowdedness
-'''
-if sortInfo["it"]["order"]["beer_price"] == 1:
-	all_bar = Sort(all_bar, "beerPrice")
-if sortInfo["it"]["order"]["crowdness"] == 1:
-	all_bar = Sort(all_bar, "prediction")
-elif sortInfo["it"]["order"]["rating"] == 1:
-	all_bar = Sort(all_bar, "rating")
-'''
-#multiple sort - not tested#
+#multiple sort - not tested on app#
 if sortInfo["it"]["order"]["beer_price"] == 1:
 	if sortInfo["it"]["order"]["crowdness"] == 1:
 		if sortInfo["it"]["order"]["rating"] == 1:
 			all_bar = Sort(all_bar, "beerPrice_prediction_rating")
 		else:
 			all_bar = Sort(all_bar, "beerPrice_prediction")
-	if sortInfo["it"]["order"]["rating"] == 1:
+	elif sortInfo["it"]["order"]["rating"] == 1:
 		all_bar = Sort(all_bar, "beerPrice_rating")
 	else:
 		all_bar = Sort(all_bar, "beerPrice")
 
-if sortInfo["it"]["order"]["crowdness"] == 1:
+elif sortInfo["it"]["order"]["crowdness"] == 1:
 	if sortInfo["it"]["order"]["rating"] == 1:
 		all_bar = Sort(all_bar, "prediction_rating")
 	else:
@@ -212,6 +218,9 @@ if sortInfo["it"]["order"]["crowdness"] == 1:
 
 elif sortInfo["it"]["order"]["rating"] == 1:
 	all_bar = Sort(all_bar, "rating")
+
+else:
+	all_bar = Sort(all_bar, "beerPrice_prediction_rating")
 
 
 for index in all_bar:
