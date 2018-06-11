@@ -183,15 +183,19 @@ if sortInfo["it"]["badgets"]["darts"] == 1:
 if sortInfo["it"]["badgets"]["table_football"] == 1:
 	badgeFilter("football",all_bar)
 	
+trash = 0
 #Bar Type
-if sortInfo["it"]["atmosphere"]["youthful"] == 0:
-	styleFilter(0,all_bar)
-if sortInfo["it"]["atmosphere"]["sport"] == 0:
-	styleFilter(1,all_bar)
-if sortInfo["it"]["atmosphere"]["luxurious"] == 0:
-	styleFilter(2,all_bar)
-if sortInfo["it"]["atmosphere"]["familiar"] == 0:
-	styleFilter(3,all_bar)
+if sortInfo["it"]["atmosphere"]["youthful"] == 0 and sortInfo["it"]["atmosphere"]["sport"] == 0 and sortInfo["it"]["atmosphere"]["luxurious"] == 0 and sortInfo["it"]["atmosphere"]["familiar"] == 0:
+	trash = trash + 1
+else:
+	if sortInfo["it"]["atmosphere"]["youthful"] == 0:
+		styleFilter(0,all_bar)
+	if sortInfo["it"]["atmosphere"]["sport"] == 0:
+		styleFilter(1,all_bar)
+	if sortInfo["it"]["atmosphere"]["luxurious"] == 0:
+		styleFilter(2,all_bar)
+	if sortInfo["it"]["atmosphere"]["familiar"] == 0:
+		styleFilter(3,all_bar)
 
 for index in all_bar:
 	print(index["atmosphere"])
