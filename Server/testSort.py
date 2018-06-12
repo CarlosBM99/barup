@@ -182,19 +182,23 @@ if sortInfo["it"]["badgets"]["darts"] == 1:
 	badgeFilter("darts",all_bar)
 if sortInfo["it"]["badgets"]["table_football"] == 1:
 	badgeFilter("football",all_bar)
-	
-#Bar Type
-if sortInfo["it"]["atmosphere"]["youthful"] == 0:
-	styleFilter(0,all_bar)
-if sortInfo["it"]["atmosphere"]["sport"] == 0:
-	styleFilter(1,all_bar)
-if sortInfo["it"]["atmosphere"]["luxurious"] == 0:
-	styleFilter(2,all_bar)
-if sortInfo["it"]["atmosphere"]["familiar"] == 0:
-	styleFilter(3,all_bar)
 
-for index in all_bar:
-	print(index["atmosphere"])
+trash = 0	
+#Bar Type
+if sortInfo["it"]["atmosphere"]["youthful"] == 0 and sortInfo["it"]["atmosphere"]["sport"] == 0 and sortInfo["it"]["atmosphere"]["luxurious"] == 0 and sortInfo["it"]["atmosphere"]["familiar"] == 0:
+	trash = trash + 1
+else:
+	if sortInfo["it"]["atmosphere"]["youthful"] == 0:
+		styleFilter(0,all_bar)
+	if sortInfo["it"]["atmosphere"]["sport"] == 0:
+		styleFilter(1,all_bar)
+	if sortInfo["it"]["atmosphere"]["luxurious"] == 0:
+		styleFilter(2,all_bar)
+	if sortInfo["it"]["atmosphere"]["familiar"] == 0:
+		styleFilter(3,all_bar)
+
+#for index in all_bar:
+	#print(index["atmosphere"])
 
 
 ###SECTION 2:sort with gradient criteria, mergesort in parallel ###	prices, rating, crowdedness
@@ -223,15 +227,15 @@ else:
 	all_bar = Sort(all_bar, "beerPrice_prediction_rating")
 
 
-for index in all_bar:
-	print(index["rating"])
+#for index in all_bar:
+	#print(index["rating"])
 
 
 ###SECTION 3:upload to result and tick off the confirmation flag ###
 					
 db.child("results").child("test").child("results").child(key).set(all_bar)
 
-time.sleep(2)
+#time.sleep(2) commented for time
 
 db.child("results").child("test").child("search").child(key).update({"state": 1})
 

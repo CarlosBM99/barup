@@ -1,5 +1,5 @@
 from random import randint
-import os
+import os, time, sys
 from pyrebase import pyrebase
 
 
@@ -15,7 +15,11 @@ firebase = pyrebase.initialize_app(config)
 
 db = firebase.database()
 
-size = 1
+if len(sys.argv) > 1: 
+	size = int(sys.argv[1])
+else:
+	size = 2
+
 data = {}
 
 for i in range(size):
@@ -48,11 +52,13 @@ for i in range(size):
 	
 
 
-print(data)
+#print(data)
 
 dummy = {}
 dummy["dummy"] = "dummy"
-db.child("results").child("test").child("search").push(data)
+db.child("results").child("test").set(dummy)
+db.child("results").child("test").child("search").set(data)
+db.child("results").child("test").child("results").set(dummy)
 #db.child("test").set(data)
 
 #CREATE TEST INSIDE RESULTS
@@ -64,8 +70,9 @@ string = "python3 testSort.py "
 for j in range(size):
 	
 	name = string + str(j)
-	print(name)
+	#print(name)
 	os.system(name)
+
 
 # sleep just in case
 
