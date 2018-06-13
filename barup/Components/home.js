@@ -81,7 +81,12 @@ class Home extends React.Component {
         crowdness: this.state.crowdness ? 1: 0,
         rating: this.state.rating ? 1: 0
       },
-      atmosphere: this.state.sport ? 0 : this.state.youthful ? 1 : this.state.luxurious ? 2 : this.state.familiar ? 3 : -1,
+      atmosphere: {
+        sport: this.state.sport ? 1:0,
+        youthful: this.state.youthful ? 1:0, 
+        luxurious: this.state.luxurious ? 1 : 0,
+        familiar: this.state.familiar ? 1 : 0,
+      },
       location: {
         latitude: 0,
         longitude: 0
@@ -100,7 +105,12 @@ class Home extends React.Component {
         crowdness: this.state.crowdness ? 1: 0,
         rating: this.state.rating ? 1: 0
       },
-      atmosphere: this.state.sport ? 0 : this.state.youthful ? 1 : this.state.luxurious ? 2 : this.state.familiar ? 3 : -1,
+      atmosphere: {
+        youthful: this.state.youthful ? 1:0, //0
+        sport: this.state.sport ? 1:0, //1
+        luxurious: this.state.luxurious ? 1 : 0, //2
+        familiar: this.state.familiar ? 1 : 0, //3
+      },
       location: {
         latitude: this.state.lat,
         longitude: this.state.lon
@@ -151,7 +161,7 @@ class Home extends React.Component {
     headerBackTitle: null,
   }
   async a(props,params){
-    params = this.getParams() 
+    params = this.getParams()
     if(params.location.latitude === 0 || params.location.longitude === 0){
       Toast.show({
         text: 'You have to specify the location',
@@ -164,7 +174,7 @@ class Home extends React.Component {
       var key = firebase.database().ref('/status_search').push().key     
       //console.log(params)
       firebase.database().ref('/status_search').child(key).set({ id: key, it: params, state: 0 })
-      fetch('https://c2d8b880.ngrok.io/barup/results.php?name='+key+'&run=true');
+      fetch('https://hack4fun.localhost.run/barup/results.php?name='+key+'&run=true');
       var that = this
       var int = setInterval(() => {
         var ref = firebase.database().ref('/status_search/')
@@ -310,36 +320,23 @@ class Home extends React.Component {
     
   }
   changeVal = (value,name) =>{
-    if(value === true){
-      if(this.state.youthful || this.state.sport || this.state.luxurious || this.state.familiar){
-        Toast.show({
-          text: 'You can only select one!',
-          buttonText: 'Okay'
-        })
-        
-      } else {
+    
         if(name === 'youthful'){
           this.setState({youthful: value})
-        } else if (name === 'sport'){
+        } 
+        if (name === 'sport'){
           this.setState({sport: value})
-        } else if (name === 'luxurious'){
+        } 
+        if (name === 'luxurious'){
           this.setState({luxurious: value})
-        } else {
+        } 
+        if (name === 'familiar'){
           this.setState({familiar: value})
+
         }
-      }
-    } else {
-      if(name === 'youthful'){
-        this.setState({youthful: value})
-      } else if (name === 'sport'){
-        this.setState({sport: value})
-      } else if (name === 'luxurious'){
-        this.setState({luxurious: value})
-      } else {
-        this.setState({familiar: value})
-      }
+
     }
-  }
+  
   rest(){
     return (
       <View style={styles.container}>
@@ -528,7 +525,7 @@ const styles = StyleSheet.create({
     
   },
   nameBarStyle: {
-    width: "20%",
+    width: "30%",
     height: '13%',
     alignItems: 'center',
     justifyContent: 'center',
@@ -545,7 +542,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   nameOrderBy: {
-    width: "20%",
+    width: "30%",
     height: '13%',
     alignItems: 'center',
     justifyContent: 'center',  
