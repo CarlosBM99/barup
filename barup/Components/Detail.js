@@ -106,10 +106,8 @@ class Detail extends Component {
     const { navigation } = this.props;
     const info = navigation.getParam('info', 'NO-ID');
 
-    var listAmbient = ["Sport", "Youthful", "Luxurious", "Familiar"];
-    var nAmbient = info.val().atmosphere - 1;
-
-    
+    var listAmbient = ["Youthful", "Sport", "Luxurious", "Familiar"];
+    var nAmbient = info.val().atmosphere;
 
 		return(
 		  <View style={styles.container}>

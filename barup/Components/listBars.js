@@ -181,6 +181,7 @@ class listBars extends Component {
     const { navigation } = this.props;
     const key = navigation.getParam('key', 'NO-ID');
     var that = this
+    that.setState({count: that.state.count -1})
     if(this.state.count < 2){
       that.setState({
         refreshing: true
@@ -200,9 +201,41 @@ class listBars extends Component {
     }
   }
 
+  renderStyle(item){
+    var listAmbient = ["Youthful", "Sport", "Luxurious", "Familiar"];
+    var nAmbient = item.val().atmosphere;
+    if(nAmbient == 0){
+      return( 
+        <View style={styles.barStyle0}>
+            <Text style={{fontSize:RF(3.3),color:'white'}}>{listAmbient[nAmbient]}</Text>
+        </View>
+      );
+    }
+    if(nAmbient == 1){
+      return( 
+        <View style={styles.barStyle1}>
+            <Text style={{fontSize:RF(3.3),color:'white'}}>{listAmbient[nAmbient]}</Text>
+        </View>
+      );
+    }
+    if(nAmbient == 2){
+      return( 
+        <View style={styles.barStyle2}>
+            <Text style={{fontSize:RF(3.3),color:'white'}}>{listAmbient[nAmbient]}</Text>
+        </View>
+      );
+    }
+    if(nAmbient == 3){
+      return( 
+        <View style={styles.barStyle3}>
+            <Text style={{fontSize:RF(3.3),color:'white'}}>{listAmbient[nAmbient]}</Text>
+        </View>
+      );
+    }
+  }
   renderItem = ({ item }) => {
-    var listAmbient = ["Sport", "Youthful", "Luxurious", "Familiar"];
-    var nAmbient = item.val().atmosphere; 
+    //var listAmbient = ["Youthful", "Sport", "Luxurious", "Familiar"];
+    //var nAmbient = item.val().atmosphere; 
 
     return (
       <TouchableHighlight onPress={() => this.goToNextScreen(item)}>
@@ -212,9 +245,7 @@ class listBars extends Component {
               <View style={styles.barFoto}>
                 <Image style={styles.imgBar} source={{uri:item.val().url}}/>
               </View>
-              <View style={styles.barStyle}>
-                <Text style={{fontSize:RF(3.3),color:'black'}}>{listAmbient[nAmbient]}</Text>
-              </View>
+              {this.renderStyle(item)}
               <View style={styles.barBadge}>
                 {this.renderDartsBadge(item)}
                 {this.renderFootballBadge(item)}
@@ -226,7 +257,7 @@ class listBars extends Component {
                 <Text style={{fontSize:RF(3)}}>{item.val().name}</Text>                
               </View>
               <View style={styles.location}>
-                <Text style={{fontSize:RF(2.5)}}>Marina</Text>                
+                <Text style={{fontSize:RF(2.5)}}>{item.val().neighborhood}</Text>                
               </View>
               <View style={styles.rating}>
                 <Rating
@@ -276,7 +307,7 @@ class listBars extends Component {
         refreshing={this.state.refreshing}
         //onRefresh={this.handleRefresh}
         onEndReached={this.handleLoadMore}
-        onEndReachedThreshold={5}
+        onEndReachedThreshold={0}
         ListFooterComponent={() => { // replaces renderFooter={() => {
           if(this.state.refreshing){
             return (
@@ -347,10 +378,31 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  barStyle: {
+  barStyle0: {
     width: "100%",
     height: '20%',
     backgroundColor: "orange",
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  barStyle1: {
+    width: "100%",
+    height: '20%',
+    backgroundColor: "green",
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  barStyle2: {
+    width: "100%",
+    height: '20%',
+    backgroundColor: "blue",
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  barStyle3: {
+    width: "100%",
+    height: '20%',
+    backgroundColor: "red",
     alignItems: 'center',
     justifyContent: 'center',
   },

@@ -1,0 +1,3 @@
+-algorithms for multiple sorting, compatible with the cluster. (MergeSort with shared memory, openMp)
+- get information from the app(sorting criteria, info to sort)
+- send information back
