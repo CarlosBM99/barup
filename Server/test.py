@@ -1,5 +1,5 @@
 from random import randint
-import os, time, sys
+import os, time, sys, multiprocessing
 from pyrebase import pyrebase
 
 
@@ -21,8 +21,9 @@ else:
 	size = 2
 
 data = {}
+indexes = range(size)
 
-for i in range(size):
+for i in indexes:
 	data[i] = {}
 	data[i]["id"] = i
 	data[i]["it"] = {}
@@ -67,11 +68,16 @@ db.child("results").child("test").child("results").set(dummy)
 # empty= {}
 #db.child("results").child("test").child(key).
 string = "python3 testSort.py "
-for j in range(size):
-	
+
+
+def operation(j):
 	name = string + str(j)
 	#print(name)
 	os.system(name)
+
+
+p = multiprocessing.Pool()
+p.map(operation, indexes)	
 
 
 # sleep just in case
