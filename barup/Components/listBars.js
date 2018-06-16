@@ -167,7 +167,8 @@ class listBars extends Component {
         that.setState({ listViewData: newData, refreshing: false, loading: false, count: that.state.count + 1})
       }
     },
-    that.setState({ listViewData: newData, refreshing: false, loading: false}));
+    //that.setState({ listViewData: newData, refreshing: false, loading: false})
+  );
     //console.log(this.state.refreshing)
   }
   
@@ -186,7 +187,7 @@ class listBars extends Component {
       that.setState({
         refreshing: true
       }, () => {
-        setTimeout(function(){that.makeRemoteRequest2(key)},2000)
+        that.makeRemoteRequest2(key)
       })
     }
   }
@@ -307,7 +308,7 @@ class listBars extends Component {
         refreshing={this.state.refreshing}
         //onRefresh={this.handleRefresh}
         onEndReached={this.handleLoadMore}
-        onEndReachedThreshold={0}
+        onEndReachedThreshold={1}
         ListFooterComponent={() => { // replaces renderFooter={() => {
           if(this.state.refreshing){
             return (
