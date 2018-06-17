@@ -6,6 +6,12 @@ A quick reminder that this repository has been the main development environment 
 
 **Disclaimer:** Since the server available is not that powerful and for the demo we try to give a good user experience for the people that are trying out the app, the database displayed for the app has 100 bars to make the processes faster.
 
+**The app is available to download for FREE**
+
+**Android:** It can be downloaded through the use of the App Launcher [Expo](https://expo.io/) available in the app store. Then, in the explore page there is a search bar where you can search for: **@barupTest/barup** and the app will be available.
+
+**iOS:** It can be downloaded through the use of the App Launcher [Expo](https://expo.io/) available in the app store. Then, you have to login. user: barupTest pass: baruppass and you will have access to the app.
+
 ## **Tools** ##
 The app will be developed using [React Native](https://facebook.github.io/react-native/) as the programming language. Using react native will let us develop at the same time for iOS and Android have the same core for both. Both versions will have minimal differences without affecting the nucleus of the app. 
 
@@ -63,11 +69,11 @@ When the list of bars is displayed, the user can select a bar pressing on it and
 ## **Extra information** ##
 **The app is fully responsive and available for Android and iOS. **
 
-**Android:** It can be downloaded through the use of the App Launcher [Expo](https://expo.io/) available in the app store. Then, in the explore page there is a search bar where you can search for: **@carlosbertomeu/barup** and the app will be available.
+**Android:** It can be downloaded through the use of the App Launcher [Expo](https://expo.io/) available in the app store. Then, in the explore page there is a search bar where you can search for: **@barupTest/barup** and the app will be available.
 
 **iOS:** It can be downloaded through the use of the App Launcher [Expo](https://expo.io/) available in the app store. Then, you have to login. user: barupTest pass: baruppass and you will have access to the app.
 
 **Fav stars:** part of the GUI are some stars that are no functional. Those are some elements prepared for the users to be able to log in, rate and comment bars and also save them as favorite bars, that's why there are a star next to the bars.
 
 **GitHub:** the app was developed by Carlos Bertomeu and Sergi Olives and since it was a high load of work, another repository was used for easy access and to avoid problems with the other development groups.
-The repository is available [https://github.com/CarlosBM99/barup/wiki](https://github.com/CarlosBM99/barup/wiki). It is only available via previous request, please send an email to **sergi.olives01@estudiant.upf.edu** to have access to this repository.
+The repository is available [https://github.com/CarlosBM99/barup/wiki](https://github.com/CarlosBM99/barup/wiki). It is only available via previous request, please send an email to **barup.business@gmail.com** to have access to this repository.
